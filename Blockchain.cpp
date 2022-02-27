@@ -15,7 +15,9 @@ Blockchain::Blockchain()
 Block Blockchain::AddBlock(Block bNew)
 {
 	bNew.bPrevHash = GetLastBlock().GetHash();
-        bNew._bHash = bNew.CalculateBlockHash();
+    bNew._bHash = bNew.CalculateBlockHash();
+    _ePochRandomness = bNew._bHash;
+    //cout<<"_ePochRandomness = " << _ePochRandomness <<endl;
 	_bChain.push_back(bNew);
         return bNew;
 }
@@ -32,4 +34,8 @@ size_t Blockchain::GetBlockIndex() const{
 void Blockchain::BlockIndexAdd() {
     _bIndex++;
 
+}
+
+string Blockchain::GetRandomness() {
+    return _ePochRandomness;
 }

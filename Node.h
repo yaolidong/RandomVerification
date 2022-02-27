@@ -62,6 +62,8 @@ public:
     void SendBlock(Block &bk);
     void SendUnpack(Message &msg);
 
+    string CalculateEpochRandomness(Blockchain bchain);
+
 
 
 };

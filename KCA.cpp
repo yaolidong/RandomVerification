@@ -41,8 +41,8 @@ int main()
 
     duration<double> diff = system_clock::now() - start;
     cout<<"elapsed: " << diff.count() << " seconds" <<endl;
-    cout<<"wrong tx TPS:" << 400/((diff.count()-10.8)/20+1.2) << " seconds" <<endl;
-    cout<<"TPS: " << NUMOFTRANS/(diff.count()-10.8)<<endl;
+    //cout<<"wrong tx TPS:" << 400/((diff.count()-10.8)/20+1.2) << " seconds" <<endl;
+    cout<<"TPS: " << NUMOFTRANS/(diff.count())<<endl;
 
 	return 0;
 }

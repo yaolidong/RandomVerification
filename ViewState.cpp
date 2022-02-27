@@ -23,6 +23,13 @@ ViewState & ViewState::operator=(const ViewState &vt) {
 }
 void ViewState::handle_message(Message msg, Node & node) {
   switch (_state) {
+	case  NODE_ADMISSION:{
+    node.CalculateEpochRandomness(node.GetBlockChain());
+						 }
+	case LEADER_Election:{
+
+						 }
+
   case SEND_TRANS: {
     // TODO：主节点验证客户端请求消息签名是否正确，如果正确，则
     msg.msg_type = Message::CONFIRM;
@@ -65,13 +72,13 @@ void ViewState::handle_message(Message msg, Node & node) {
         Block bNew = node.SealTrans();
         if ((msg.n+1)%400 == 0)
         {
-          if ((msg.n+1)/400 >=1 &&  (msg.n+1)/400 <=9)
-          {
-            std::cout<<"交易被质疑，进入审查。"<<std::endl;
-            //std::cout<<"审查结束。"<<std::endl;
-            this_thread::sleep_for(1.2s);
-            std::cout<<"审查结束。区块"<< (msg.n+1)/400<<"错误"<<std::endl;
-          }
+//          if ((msg.n+1)/400 >=1 &&  (msg.n+1)/400 <=9)
+//          {
+//            std::cout<<"交易被质疑，进入审查。"<<std::endl;
+//            //std::cout<<"审查结束。"<<std::endl;
+//            this_thread::sleep_for(1.2s);
+//            std::cout<<"审查结束。区块"<< (msg.n+1)/400<<"错误"<<std::endl;
+//          }
           node.SendBlock(bNew);
           node.SendUnpack(msg);
           _state = SEND_BLOCK;

@@ -1,5 +1,9 @@
 //
 // Created by 姚黎东 on 2021/4/19.
+//缓存池是否为空
+//计算Merkle root
+//获取交易数量
+//区块打包上链
 //
 
 #ifndef K_CA_SEALER_H

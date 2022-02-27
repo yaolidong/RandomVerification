@@ -60,7 +60,7 @@ bool Network::List_Blocks() {
 network_address_t NetworkNode::GetNodeAddress() const{
     return _nAddress;
 }
-
+//create node:straight receive message from message list  
  NetworkNode::NetworkNode() :_nAddress(Network::instance().AssignAddress()) {
      std::thread([this]() {
          while (true) {

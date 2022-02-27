@@ -16,10 +16,11 @@ public:
     Block AddBlock(Block bNew);
     size_t GetBlockIndex() const;
     void BlockIndexAdd();
+    string GetRandomness();
 private:
     //uint32_t _mDifficulty;
     vector<Block> _bChain;
-
+    string _ePochRandomness;
     Block GetLastBlock() const;
 
 };

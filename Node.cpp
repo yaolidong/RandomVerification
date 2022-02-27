@@ -26,9 +26,10 @@ Blockchain Node::GetBlockChain() {
   return bChain;
 }
 
-
+//构造P2P网络
 void Node::SetAllNodes(const std::vector<std::unique_ptr<Node>> &allNodes) {
 
+//GetBlockChain()
     for (auto & node : allNodes) {
         if (node->GetNodeAddress() == GetNodeAddress()) {
             continue;
@@ -175,4 +176,11 @@ void Node::SendUnpack(Message &msg) {
   unpack.c = msg.c;
   unpack.m = msg.m;
   SendAll(unpack);
+}
+
+string Node::CalculateEpochRandomness(Blockchain bchain) {
+    stringstream ss;
+    cout<<"节点"<<GetNodeAdd()<<"ePochRandomness:" <<bchain.GetRandomness();
+    ss << GetNodeAdd() << bchain.GetRandomness();
+    return sha256(ss.str());
 }
