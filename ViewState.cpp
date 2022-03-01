@@ -24,64 +24,93 @@ ViewState & ViewState::operator=(const ViewState &vt) {
 void ViewState::handle_message(Message msg, Node & node) {
   switch (_state) {
 	case  NODE_ADMISSION:{
-    node.CalculateEpochRandomness(node.GetBlockChain());
-						 }
+        msg.msg_type = Message::ADMISS;
+        msg.i = node.GetNodeAdd();
+        msg.n = node.GetTransNum();
+        if (node.GetNodeAdd() == 2)
+        {
+            //cout<<"节点 " << node.GetNodeAdd() <<" 进入节点准入阶段！"<<endl;
+            //node.iDentity = node.CalculateEpochRandomness(node.GetBlockChain());
+            //cout<<node.iDentity<<endl;
+        }
+        if (msg.n == 1)
+        {
+            cout<<"节点 "<<node.GetNodeAdd() <<"即将进入领导人选举阶段。"<<endl;
+        }
+
+        _state = LEADER_Election;
+        node.SendAll(msg);
+    }
+          break;
 	case LEADER_Election:{
+        msg.msg_type = Message::ELECT;
 
-						 }
+        msg.i = node.GetNodeAdd();
 
+        //节点解决POW，满足条件的进入委员会
+        if (true)
+        {
+
+        }
+        if (msg.n == 1)
+        {
+            cout<<"节点 "<<node.GetNodeAdd() <<"即将进入发送交易阶段。"<<endl;
+        }
+        _state = SEND_TRANS;
+    }
+          break;
+    //交易发送阶段：
   case SEND_TRANS: {
-    // TODO：主节点验证客户端请求消息签名是否正确，如果正确，则
     msg.msg_type = Message::CONFIRM;
     msg.i = node.GetNodeAdd();
-    msg.n = node.GetTransNum();
+
     node.SendAll(msg);
+
+    //如果该节点是主节点，则进入交易确认阶段，否则，进入等待区块阶段
     if (node.GetNodeAdd() == 2)
-      _state = COMFIRM_TRANS;
+    {
+        if (msg.n == 1)
+        {
+            cout<<"主节点 "<<node.GetNodeAdd() <<"即将进入交易确认阶段。"<<endl;
+        }
+        _state = COMFIRM_TRANS;
+    }
+
     else {
+        if (msg.n == 1)
+        {
+            cout<<"节点 "<<node.GetNodeAdd() <<"即将进入等待区块阶段。"<<endl;
+        }
       _state = WAIT_BLOCK;
     }
   }
   break;
+  //区块等待阶段：主节点将区块分发给其他节点，网络区块同步
   case WAIT_BLOCK:
   {
     if (msg.msg_type == Message::UNPACK)
     {
-      //std::cout << "节点：" << node.GetNodeAdd() <<" 添加区块。"<<std::endl;
       node.GetOutBk();
     }
 
   }
   break;
+  //交易确认阶段（主节点）：主节点将达到k确认的交易放入交易池中，若交易池中的交易数量达到400个，则打包交易成区块并发送给其他共识节点
+  //不然，则进入等待交易模式
   case COMFIRM_TRANS: {
-    // TODO：副本节点验证
-    //  a. 主节点PRE-PREPARE消息签名是否正确。
-    //  b. 当前副本节点是否已经收到了一条在同一v下并且编号也是n，但是签名不同的PRE-PREPARE信息。
-    //  c. d与m的摘要是否一致。
-    //  d. n是否在区间[h, H]内。
-    //  如果正确，则
-
     if (msg.msg_type == Message::CONFIRM) {
       accepted_confirm++;
     }
-    if (accepted_confirm == k_value) // TODO:K_CA
+    if (accepted_confirm == k_value)
     {
-        //std::cout << "节点：" << node.GetNodeAdd() << " 达到k确认！"
-                  //<< std::endl;
         node.TransToCache(msg);
-        Block bNew = node.SealTrans();
+        Block bNew = node.SealTrans();//交易打包进区块中
         if ((msg.n+1)%400 == 0)
         {
-//          if ((msg.n+1)/400 >=1 &&  (msg.n+1)/400 <=9)
-//          {
-//            std::cout<<"交易被质疑，进入审查。"<<std::endl;
-//            //std::cout<<"审查结束。"<<std::endl;
-//            this_thread::sleep_for(1.2s);
-//            std::cout<<"审查结束。区块"<< (msg.n+1)/400<<"错误"<<std::endl;
-//          }
           node.SendBlock(bNew);
           node.SendUnpack(msg);
-          _state = SEND_BLOCK;
+        //  _state = NODE_ADMISSION;
+//          cout<< "共识完成，即将重新进入节点准入阶段。"<<endl;
         }
         else
           _state = WAIT_BLOCK;

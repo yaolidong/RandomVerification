@@ -8,6 +8,8 @@
 {
 	enum msg_type_t
 	{
+        ADMISS,
+        ELECT,
 		REQUEST,
 		CONFIRM,
 		UNPACK
@@ -20,7 +22,8 @@
 	size_t v = 0;
 	size_t n = 0;
 	network_address_t i = 0;
-        std::string m;
+    std::string m;
+     std::string r;//epochRandomness
 
 
         explicit Message(msg_type_t _type);

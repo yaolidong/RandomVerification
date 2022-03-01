@@ -17,9 +17,9 @@ Block Blockchain::AddBlock(Block bNew)
 	bNew.bPrevHash = GetLastBlock().GetHash();
     bNew._bHash = bNew.CalculateBlockHash();
     _ePochRandomness = bNew._bHash;
-    //cout<<"_ePochRandomness = " << _ePochRandomness <<endl;
+//    cout<<"_ePochRandomness = " << _ePochRandomness <<endl;
 	_bChain.push_back(bNew);
-        return bNew;
+    return bNew;
 }
 
 Block Blockchain::GetLastBlock() const

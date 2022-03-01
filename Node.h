@@ -49,7 +49,7 @@ class Node : public NetworkNode {
     size_t _view = 0;
 
 public:
-
+    string iDentity;
     size_t GetTransNum();
     Blockchain GetBlockChain();
     void TransToCache(Message &msg);

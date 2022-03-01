@@ -139,9 +139,8 @@ Block Node::SealTrans() {
     Block bNew;
     if(400 == sl.GetTransCount())
     {
-        //std::cout << "节点：" << GetNodeAdd() <<" ";
-        bNew = sl.Upchain(bChain);
-        sl.ReduceCount();
+        bNew = sl.Upchain(bChain);//区块上链
+        sl.ReduceCount();//交易池计数器
     }
     return bNew;
 }
@@ -152,20 +151,29 @@ void Node::SendBlock(Block &bk) {
   }
 }
 
+//主节点分发区块给其他节点
 void Node::GetOutBk() {
   BlockAddressed bka;
+
+  //区块池不为空，则添加区块
   if (!Network::instance().List_Blocks())
   {
      bka = Network::instance().RecvBlock(GetNodeAdd());
      bChain.AddBlock(bka.bk);
+     //其他节点接收到主节点的区块，
      if (GetNodeAdd() == 3)
      {
-       std::cout << "节点：" << GetNodeAdd() <<" 添加第 "<< bka.bk.GetBIndex() <<" 个区块. "<< std::endl;
+         uint32_t block_index = bka.bk.GetBIndex();
+       std::cout << "节点：" << GetNodeAdd() <<" 添加第 "<< block_index <<" 个区块. "<< std::endl;
+       std::cout << "第"<< block_index <<"个区块的ePochRandomness： " << bka.bk._bHash <<endl;
      }
   }
   else
     std::cout << "区块列表为空！"<<std::endl;
 }
+
+
+
 void Node::SendUnpack(Message &msg) {
   Message unpack(Message::UNPACK);
   unpack.t = msg.t;
@@ -180,7 +188,7 @@ void Node::SendUnpack(Message &msg) {
 
 string Node::CalculateEpochRandomness(Blockchain bchain) {
     stringstream ss;
-    cout<<"节点"<<GetNodeAdd()<<"ePochRandomness:" <<bchain.GetRandomness();
+    cout<<"节点 "<<GetNodeAdd()<<" ePochRandomness:" <<bchain.GetRandomness()<<endl;
     ss << GetNodeAdd() << bchain.GetRandomness();
     return sha256(ss.str());
 }
