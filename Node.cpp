@@ -161,12 +161,12 @@ void Node::GetOutBk() {
      bka = Network::instance().RecvBlock(GetNodeAdd());
      bChain.AddBlock(bka.bk);
      //其他节点接收到主节点的区块，
-     if (GetNodeAdd() == 3)
-     {
+//     if (GetNodeAdd() == 3)
+//     {
          uint32_t block_index = bka.bk.GetBIndex();
        std::cout << "节点：" << GetNodeAdd() <<" 添加第 "<< block_index <<" 个区块. "<< std::endl;
        std::cout << "第"<< block_index <<"个区块的ePochRandomness： " << bka.bk._bHash <<endl;
-     }
+ //    }
   }
   else
     std::cout << "区块列表为空！"<<std::endl;
@@ -183,6 +183,7 @@ void Node::SendUnpack(Message &msg) {
   unpack.v = msg.v;
   unpack.c = msg.c;
   unpack.m = msg.m;
+  unpack.r = msg.r;
   SendAll(unpack);
 }
 

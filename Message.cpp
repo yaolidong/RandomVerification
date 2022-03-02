@@ -7,7 +7,7 @@ Message::Message(msg_type_t _type):msg_type(_type) {
 
 std::string Message::diggest() {
     std::stringstream ss;
-    ss << o << t << c;
+    ss << o << t << c << r;
     return sha256(ss.str());
 }
 
@@ -20,6 +20,7 @@ std::string Message::str() const{
         <<", n="<<n
         <<", c="<<c
         <<", d="<<d
+        <<", r="<<r
         <<")";
     return ss.str();
 }
@@ -31,6 +32,7 @@ Message::Message(const Message &msg) {
   d = msg.d;
   v = msg.v;
   n = msg.n;
+  r = msg.r;
 }
 Message &Message::operator=(const Message &msg) {
   if (this == & msg)
@@ -42,6 +44,7 @@ Message &Message::operator=(const Message &msg) {
   d = msg.d;
   v = msg.v;
   n = msg.n;
+  r = msg.r;
   return  *this;
 
 }

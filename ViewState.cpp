@@ -23,24 +23,20 @@ ViewState & ViewState::operator=(const ViewState &vt) {
 }
 void ViewState::handle_message(Message msg, Node & node) {
   switch (_state) {
-	case  NODE_ADMISSION:{
+	case  NODE_ADMISSION: {
         msg.msg_type = Message::ADMISS;
         msg.i = node.GetNodeAdd();
         msg.n = node.GetTransNum();
-        if (node.GetNodeAdd() == 2)
-        {
-            //cout<<"节点 " << node.GetNodeAdd() <<" 进入节点准入阶段！"<<endl;
-            //node.iDentity = node.CalculateEpochRandomness(node.GetBlockChain());
-            //cout<<node.iDentity<<endl;
-        }
-        if (msg.n == 1)
-        {
-            cout<<"节点 "<<node.GetNodeAdd() <<"即将进入领导人选举阶段。"<<endl;
-        }
+        //cout<<"节点 " << node.GetNodeAdd() <<" 进入节点准入阶段！"<<endl;
+        msg.r = node.CalculateEpochRandomness(node.GetBlockChain());
+        cout << msg.r << endl;
 
+        if (msg.n == 1) {
+            cout << "节点 " << node.GetNodeAdd() << "即将进入领导人选举阶段。" << endl;
+            }
         _state = LEADER_Election;
         node.SendAll(msg);
-    }
+        }
           break;
 	case LEADER_Election:{
         msg.msg_type = Message::ELECT;
@@ -91,6 +87,8 @@ void ViewState::handle_message(Message msg, Node & node) {
     if (msg.msg_type == Message::UNPACK)
     {
       node.GetOutBk();
+      cout<<"节点区块同步完成，进入下一个epoch."<<endl;
+      _state = NODE_ADMISSION;
     }
 
   }
@@ -109,8 +107,10 @@ void ViewState::handle_message(Message msg, Node & node) {
         {
           node.SendBlock(bNew);
           node.SendUnpack(msg);
-        //  _state = NODE_ADMISSION;
-//          cout<< "共识完成，即将重新进入节点准入阶段。"<<endl;
+          _state = NODE_ADMISSION;
+          cout<< "主节点发送区块完成，即将进入下一个epoch。"<<endl;
+
+
         }
         else
           _state = WAIT_BLOCK;

@@ -21,7 +21,7 @@ int main()
     {
         node->SetAllNodes(nodes);
     }
-    for(int i = 0; i < NUMOFTRANS; i++)
+    for(int i = 0; i < 400; i++)
     {
         std::string str;
         str = "Test"+ to_string(i);
@@ -31,6 +31,7 @@ int main()
         request.c = request.i = client.GetNodeAddress();
         request.d = request.diggest();
         request.m = request.str();
+      //  request.r =
         for(int j = 0; j < Num_Node; j++)
         {
           client.SendRequest(nodes[j]->GetNodeAddress(),request);
@@ -41,7 +42,6 @@ int main()
 
     duration<double> diff = system_clock::now() - start;
     cout<<"elapsed: " << diff.count() << " seconds" <<endl;
-    //cout<<"wrong tx TPS:" << 400/((diff.count()-10.8)/20+1.2) << " seconds" <<endl;
     cout<<"TPS: " << NUMOFTRANS/(diff.count())<<endl;
 
 	return 0;
