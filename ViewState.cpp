@@ -28,10 +28,10 @@ void ViewState::handle_message(Message msg, Node & node) {
         msg.i = node.GetNodeAdd();
         msg.n = node.GetTransNum();
         //cout<<"节点 " << node.GetNodeAdd() <<" 进入节点准入阶段！"<<endl;
-        msg.r = node.CalculateEpochRandomness(node.GetBlockChain());
-        cout << msg.r << endl;
+//        msg.r =;
+        //cout << msg.r << endl;
 
-        if (msg.n == 1) {
+        if (msg.n %400== 1) {
             cout << "节点 " << node.GetNodeAdd() << "即将进入领导人选举阶段。" << endl;
             }
         _state = LEADER_Election;
@@ -48,7 +48,7 @@ void ViewState::handle_message(Message msg, Node & node) {
         {
 
         }
-        if (msg.n == 1)
+        if (msg.n%400 == 1)
         {
             cout<<"节点 "<<node.GetNodeAdd() <<"即将进入发送交易阶段。"<<endl;
         }
@@ -65,7 +65,7 @@ void ViewState::handle_message(Message msg, Node & node) {
     //如果该节点是主节点，则进入交易确认阶段，否则，进入等待区块阶段
     if (node.GetNodeAdd() == 2)
     {
-        if (msg.n == 1)
+        if (msg.n%400 == 1)
         {
             cout<<"主节点 "<<node.GetNodeAdd() <<"即将进入交易确认阶段。"<<endl;
         }
@@ -73,7 +73,7 @@ void ViewState::handle_message(Message msg, Node & node) {
     }
 
     else {
-        if (msg.n == 1)
+        if (msg.n%400 == 1)
         {
             cout<<"节点 "<<node.GetNodeAdd() <<"即将进入等待区块阶段。"<<endl;
         }
@@ -107,6 +107,7 @@ void ViewState::handle_message(Message msg, Node & node) {
         {
           node.SendBlock(bNew);
           node.SendUnpack(msg);
+          node.iDentity = node.CalculateEpochRandomness(bNew);
           _state = NODE_ADMISSION;
           cout<< "主节点发送区块完成，即将进入下一个epoch。"<<endl;
 

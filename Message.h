@@ -1,6 +1,6 @@
 #ifndef K_CA_MESSAGE_H
 #define K_CA_MESSAGE_H
-#include "KCA.h"
+#include "RandomValidation.h"
 #include "sha256.h"
 #include <string>
 

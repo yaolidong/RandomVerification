@@ -26,6 +26,6 @@ add_executable(K--CA
         Network.cpp
         Node.h
         Node.cpp
-        KCA.h
-        KCA.cpp
-)
+        RandomValidation.h
+        RandomValidation.cpp
+        "Committee .h" "Committee .cpp")

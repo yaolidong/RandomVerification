@@ -166,6 +166,10 @@ void Node::GetOutBk() {
          uint32_t block_index = bka.bk.GetBIndex();
        std::cout << "节点：" << GetNodeAdd() <<" 添加第 "<< block_index <<" 个区块. "<< std::endl;
        std::cout << "第"<< block_index <<"个区块的ePochRandomness： " << bka.bk._bHash <<endl;
+       stringstream ss;
+       ss << GetNodeAdd() << bka.bk._bHash;
+       iDentity = sha256(ss.str());
+ //
  //    }
   }
   else
@@ -187,9 +191,9 @@ void Node::SendUnpack(Message &msg) {
   SendAll(unpack);
 }
 
-string Node::CalculateEpochRandomness(Blockchain bchain) {
+string Node::CalculateEpochRandomness(Block &bk) {
     stringstream ss;
-    cout<<"节点 "<<GetNodeAdd()<<" ePochRandomness:" <<bchain.GetRandomness()<<endl;
-    ss << GetNodeAdd() << bchain.GetRandomness();
+ //   cout<<"节点 "<<GetNodeAdd()<<" ePochRandomness:" <<bk._bHash<<endl;
+    ss << GetNodeAdd() << bk._bHash;
     return sha256(ss.str());
 }
