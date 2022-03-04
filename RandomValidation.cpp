@@ -62,14 +62,16 @@ int main()
         for (int j = 0; j < NUMOFMEMBERS; ++j) {
             if(j == 0)
             {
-                vec_committee.emplace_back(NUMOFMEMBERS,i+1,arr2[i][0]);
+                vec_committee.emplace_back(Committee(NUMOFMEMBERS,i+1,arr2[i][0]));
                 cout<<"第 " << i+1 <<" 个委员会的主节点：" << arr2[i][j] << endl;
             }
             vec_committee[i].GetCommitteeMembers().emplace_back(arr2[i][j]);
         }
     }
 
-
+for (auto it:vec_committee) {
+	it.ShuffleNode(nodes);
+}
 
 
 
