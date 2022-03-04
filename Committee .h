@@ -23,9 +23,6 @@ public:
 
     void ShuffleNode(std::vector<std::unique_ptr<Node>> &nodes);
 
-    //void AssignCommittee(Node &node Message &msg);
-
-
 
 
 

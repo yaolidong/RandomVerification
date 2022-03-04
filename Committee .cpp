@@ -13,6 +13,21 @@ Committee::Committee(int num_members, int seq, network_address_t wism) {
 
 void Committee::ShuffleNode(std::vector<std::unique_ptr<Node>> &nodes) {
 
+    for (auto &node:nodes) {
+        for (auto it:GetCommitteeMembers()) {
+            if (node->GetNodeAdd() == it)
+            {
+                for (auto  iter:GetCommitteeMembers()) {
+                    if (node->GetNodeAdd() == iter)
+                        continue;
+                    else
+                    {
+                        node->_otherCommitteeNodes.emplace_back(it);
+                    }
+                }
+            }
+        }
+    }
 //    int num_committee = Num_Node/NUMOFMEMBERS;
 //
 //    //节点分配委员会，并保存所在委员会中其他节点
