@@ -1,13 +1,28 @@
+
+
+# 声明要求的cmake最低版本
 cmake_minimum_required(VERSION 3.17)
-project(K--CA)
+
+# 声明一个cmake工程
+project(RandomValidation)
+
+
+
+
+
+
 
 set(CMAKE_CXX_STANDARD 14)
 
 set(CMAKE_BUILD_TYPE Debug)
 
+
+
 include_directories(.)
 
-add_executable(K--CA
+# 添加一个可执行程序
+# 语法为： add_executable( 程序名  源代码文件
+add_executable(RandomValidation
         Blockchain.cpp
         Block.cpp
         Block.h
@@ -28,4 +43,5 @@ add_executable(K--CA
         Node.cpp
         RandomValidation.h
         RandomValidation.cpp
-        "Committee .h" "Committee .cpp")
+        Committee.h
+        Committee.cpp)

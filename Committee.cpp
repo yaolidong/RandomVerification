@@ -1,7 +1,7 @@
 //
 // Created by 姚黎东 on 2022/3/3.
 //
-#include "Committee .h"
+#include "Committee.h"
 
 Committee::Committee():number_members(0),sequence(0),whoismaster(0) {}
 
@@ -22,7 +22,7 @@ void Committee::ShuffleNode(std::vector<std::unique_ptr<Node>> &nodes) {
                         continue;
                     else
                     {
-                        node->_otherCommitteeNodes.emplace_back(it);
+                        node->_otherCommitteeNodes.emplace_back(iter);
                     }
                 }
             }

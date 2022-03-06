@@ -11,7 +11,7 @@
 # =============================================================================
 
 # =============================================================================
-# Project: K--CA
+# Project: RandomValidation
 # Configurations: Debug
 # =============================================================================
 
@@ -64,106 +64,106 @@ build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
 build edit_cache: phony CMakeFiles/edit_cache.util
 
 # =============================================================================
-# Object build statements for EXECUTABLE target K--CA
+# Object build statements for EXECUTABLE target RandomValidation
 
 
 #############################################
-# Order-only phony target for K--CA
+# Order-only phony target for RandomValidation
 
-build cmake_object_order_depends_target_K--CA: phony || CMakeFiles/K--CA.dir
+build cmake_object_order_depends_target_RandomValidation: phony || CMakeFiles/RandomValidation.dir
 
-build CMakeFiles/K--CA.dir/Blockchain.cpp.o: CXX_COMPILER__K--CA_Debug /Users/yao/Documents/GitHub/desktop-tutorial/Randomverification/Blockchain.cpp || cmake_object_order_depends_target_K--CA
-  DEP_FILE = CMakeFiles/K--CA.dir/Blockchain.cpp.o.d
+build CMakeFiles/RandomValidation.dir/Blockchain.cpp.o: CXX_COMPILER__RandomValidation_Debug /Users/yao/Documents/GitHub/desktop-tutorial/Randomverification/Blockchain.cpp || cmake_object_order_depends_target_RandomValidation
+  DEP_FILE = CMakeFiles/RandomValidation.dir/Blockchain.cpp.o.d
   FLAGS = -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -std=gnu++14
   INCLUDES = -I/Users/yao/Documents/GitHub/desktop-tutorial/Randomverification/.
-  OBJECT_DIR = CMakeFiles/K--CA.dir
-  OBJECT_FILE_DIR = CMakeFiles/K--CA.dir
+  OBJECT_DIR = CMakeFiles/RandomValidation.dir
+  OBJECT_FILE_DIR = CMakeFiles/RandomValidation.dir
 
-build CMakeFiles/K--CA.dir/Block.cpp.o: CXX_COMPILER__K--CA_Debug /Users/yao/Documents/GitHub/desktop-tutorial/Randomverification/Block.cpp || cmake_object_order_depends_target_K--CA
-  DEP_FILE = CMakeFiles/K--CA.dir/Block.cpp.o.d
+build CMakeFiles/RandomValidation.dir/Block.cpp.o: CXX_COMPILER__RandomValidation_Debug /Users/yao/Documents/GitHub/desktop-tutorial/Randomverification/Block.cpp || cmake_object_order_depends_target_RandomValidation
+  DEP_FILE = CMakeFiles/RandomValidation.dir/Block.cpp.o.d
   FLAGS = -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -std=gnu++14
   INCLUDES = -I/Users/yao/Documents/GitHub/desktop-tutorial/Randomverification/.
-  OBJECT_DIR = CMakeFiles/K--CA.dir
-  OBJECT_FILE_DIR = CMakeFiles/K--CA.dir
+  OBJECT_DIR = CMakeFiles/RandomValidation.dir
+  OBJECT_FILE_DIR = CMakeFiles/RandomValidation.dir
 
-build CMakeFiles/K--CA.dir/Cache.cpp.o: CXX_COMPILER__K--CA_Debug /Users/yao/Documents/GitHub/desktop-tutorial/Randomverification/Cache.cpp || cmake_object_order_depends_target_K--CA
-  DEP_FILE = CMakeFiles/K--CA.dir/Cache.cpp.o.d
+build CMakeFiles/RandomValidation.dir/Cache.cpp.o: CXX_COMPILER__RandomValidation_Debug /Users/yao/Documents/GitHub/desktop-tutorial/Randomverification/Cache.cpp || cmake_object_order_depends_target_RandomValidation
+  DEP_FILE = CMakeFiles/RandomValidation.dir/Cache.cpp.o.d
   FLAGS = -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -std=gnu++14
   INCLUDES = -I/Users/yao/Documents/GitHub/desktop-tutorial/Randomverification/.
-  OBJECT_DIR = CMakeFiles/K--CA.dir
-  OBJECT_FILE_DIR = CMakeFiles/K--CA.dir
+  OBJECT_DIR = CMakeFiles/RandomValidation.dir
+  OBJECT_FILE_DIR = CMakeFiles/RandomValidation.dir
 
-build CMakeFiles/K--CA.dir/Sealer.cpp.o: CXX_COMPILER__K--CA_Debug /Users/yao/Documents/GitHub/desktop-tutorial/Randomverification/Sealer.cpp || cmake_object_order_depends_target_K--CA
-  DEP_FILE = CMakeFiles/K--CA.dir/Sealer.cpp.o.d
+build CMakeFiles/RandomValidation.dir/Sealer.cpp.o: CXX_COMPILER__RandomValidation_Debug /Users/yao/Documents/GitHub/desktop-tutorial/Randomverification/Sealer.cpp || cmake_object_order_depends_target_RandomValidation
+  DEP_FILE = CMakeFiles/RandomValidation.dir/Sealer.cpp.o.d
   FLAGS = -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -std=gnu++14
   INCLUDES = -I/Users/yao/Documents/GitHub/desktop-tutorial/Randomverification/.
-  OBJECT_DIR = CMakeFiles/K--CA.dir
-  OBJECT_FILE_DIR = CMakeFiles/K--CA.dir
+  OBJECT_DIR = CMakeFiles/RandomValidation.dir
+  OBJECT_FILE_DIR = CMakeFiles/RandomValidation.dir
 
-build CMakeFiles/K--CA.dir/sha256.cpp.o: CXX_COMPILER__K--CA_Debug /Users/yao/Documents/GitHub/desktop-tutorial/Randomverification/sha256.cpp || cmake_object_order_depends_target_K--CA
-  DEP_FILE = CMakeFiles/K--CA.dir/sha256.cpp.o.d
+build CMakeFiles/RandomValidation.dir/sha256.cpp.o: CXX_COMPILER__RandomValidation_Debug /Users/yao/Documents/GitHub/desktop-tutorial/Randomverification/sha256.cpp || cmake_object_order_depends_target_RandomValidation
+  DEP_FILE = CMakeFiles/RandomValidation.dir/sha256.cpp.o.d
   FLAGS = -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -std=gnu++14
   INCLUDES = -I/Users/yao/Documents/GitHub/desktop-tutorial/Randomverification/.
-  OBJECT_DIR = CMakeFiles/K--CA.dir
-  OBJECT_FILE_DIR = CMakeFiles/K--CA.dir
+  OBJECT_DIR = CMakeFiles/RandomValidation.dir
+  OBJECT_FILE_DIR = CMakeFiles/RandomValidation.dir
 
-build CMakeFiles/K--CA.dir/ViewState.cpp.o: CXX_COMPILER__K--CA_Debug /Users/yao/Documents/GitHub/desktop-tutorial/Randomverification/ViewState.cpp || cmake_object_order_depends_target_K--CA
-  DEP_FILE = CMakeFiles/K--CA.dir/ViewState.cpp.o.d
+build CMakeFiles/RandomValidation.dir/ViewState.cpp.o: CXX_COMPILER__RandomValidation_Debug /Users/yao/Documents/GitHub/desktop-tutorial/Randomverification/ViewState.cpp || cmake_object_order_depends_target_RandomValidation
+  DEP_FILE = CMakeFiles/RandomValidation.dir/ViewState.cpp.o.d
   FLAGS = -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -std=gnu++14
   INCLUDES = -I/Users/yao/Documents/GitHub/desktop-tutorial/Randomverification/.
-  OBJECT_DIR = CMakeFiles/K--CA.dir
-  OBJECT_FILE_DIR = CMakeFiles/K--CA.dir
+  OBJECT_DIR = CMakeFiles/RandomValidation.dir
+  OBJECT_FILE_DIR = CMakeFiles/RandomValidation.dir
 
-build CMakeFiles/K--CA.dir/Message.cpp.o: CXX_COMPILER__K--CA_Debug /Users/yao/Documents/GitHub/desktop-tutorial/Randomverification/Message.cpp || cmake_object_order_depends_target_K--CA
-  DEP_FILE = CMakeFiles/K--CA.dir/Message.cpp.o.d
+build CMakeFiles/RandomValidation.dir/Message.cpp.o: CXX_COMPILER__RandomValidation_Debug /Users/yao/Documents/GitHub/desktop-tutorial/Randomverification/Message.cpp || cmake_object_order_depends_target_RandomValidation
+  DEP_FILE = CMakeFiles/RandomValidation.dir/Message.cpp.o.d
   FLAGS = -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -std=gnu++14
   INCLUDES = -I/Users/yao/Documents/GitHub/desktop-tutorial/Randomverification/.
-  OBJECT_DIR = CMakeFiles/K--CA.dir
-  OBJECT_FILE_DIR = CMakeFiles/K--CA.dir
+  OBJECT_DIR = CMakeFiles/RandomValidation.dir
+  OBJECT_FILE_DIR = CMakeFiles/RandomValidation.dir
 
-build CMakeFiles/K--CA.dir/Network.cpp.o: CXX_COMPILER__K--CA_Debug /Users/yao/Documents/GitHub/desktop-tutorial/Randomverification/Network.cpp || cmake_object_order_depends_target_K--CA
-  DEP_FILE = CMakeFiles/K--CA.dir/Network.cpp.o.d
+build CMakeFiles/RandomValidation.dir/Network.cpp.o: CXX_COMPILER__RandomValidation_Debug /Users/yao/Documents/GitHub/desktop-tutorial/Randomverification/Network.cpp || cmake_object_order_depends_target_RandomValidation
+  DEP_FILE = CMakeFiles/RandomValidation.dir/Network.cpp.o.d
   FLAGS = -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -std=gnu++14
   INCLUDES = -I/Users/yao/Documents/GitHub/desktop-tutorial/Randomverification/.
-  OBJECT_DIR = CMakeFiles/K--CA.dir
-  OBJECT_FILE_DIR = CMakeFiles/K--CA.dir
+  OBJECT_DIR = CMakeFiles/RandomValidation.dir
+  OBJECT_FILE_DIR = CMakeFiles/RandomValidation.dir
 
-build CMakeFiles/K--CA.dir/Node.cpp.o: CXX_COMPILER__K--CA_Debug /Users/yao/Documents/GitHub/desktop-tutorial/Randomverification/Node.cpp || cmake_object_order_depends_target_K--CA
-  DEP_FILE = CMakeFiles/K--CA.dir/Node.cpp.o.d
+build CMakeFiles/RandomValidation.dir/Node.cpp.o: CXX_COMPILER__RandomValidation_Debug /Users/yao/Documents/GitHub/desktop-tutorial/Randomverification/Node.cpp || cmake_object_order_depends_target_RandomValidation
+  DEP_FILE = CMakeFiles/RandomValidation.dir/Node.cpp.o.d
   FLAGS = -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -std=gnu++14
   INCLUDES = -I/Users/yao/Documents/GitHub/desktop-tutorial/Randomverification/.
-  OBJECT_DIR = CMakeFiles/K--CA.dir
-  OBJECT_FILE_DIR = CMakeFiles/K--CA.dir
+  OBJECT_DIR = CMakeFiles/RandomValidation.dir
+  OBJECT_FILE_DIR = CMakeFiles/RandomValidation.dir
 
-build CMakeFiles/K--CA.dir/RandomValidation.cpp.o: CXX_COMPILER__K--CA_Debug /Users/yao/Documents/GitHub/desktop-tutorial/Randomverification/RandomValidation.cpp || cmake_object_order_depends_target_K--CA
-  DEP_FILE = CMakeFiles/K--CA.dir/RandomValidation.cpp.o.d
+build CMakeFiles/RandomValidation.dir/RandomValidation.cpp.o: CXX_COMPILER__RandomValidation_Debug /Users/yao/Documents/GitHub/desktop-tutorial/Randomverification/RandomValidation.cpp || cmake_object_order_depends_target_RandomValidation
+  DEP_FILE = CMakeFiles/RandomValidation.dir/RandomValidation.cpp.o.d
   FLAGS = -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -std=gnu++14
   INCLUDES = -I/Users/yao/Documents/GitHub/desktop-tutorial/Randomverification/.
-  OBJECT_DIR = CMakeFiles/K--CA.dir
-  OBJECT_FILE_DIR = CMakeFiles/K--CA.dir
+  OBJECT_DIR = CMakeFiles/RandomValidation.dir
+  OBJECT_FILE_DIR = CMakeFiles/RandomValidation.dir
 
-build CMakeFiles/K--CA.dir/Committee_.cpp.o: CXX_COMPILER__K--CA_Debug /Users/yao/Documents/GitHub/desktop-tutorial/Randomverification/Committee$ .cpp || cmake_object_order_depends_target_K--CA
-  DEP_FILE = CMakeFiles/K--CA.dir/Committee_.cpp.o.d
+build CMakeFiles/RandomValidation.dir/Committee.cpp.o: CXX_COMPILER__RandomValidation_Debug /Users/yao/Documents/GitHub/desktop-tutorial/Randomverification/Committee.cpp || cmake_object_order_depends_target_RandomValidation
+  DEP_FILE = CMakeFiles/RandomValidation.dir/Committee.cpp.o.d
   FLAGS = -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk -std=gnu++14
   INCLUDES = -I/Users/yao/Documents/GitHub/desktop-tutorial/Randomverification/.
-  OBJECT_DIR = CMakeFiles/K--CA.dir
-  OBJECT_FILE_DIR = CMakeFiles/K--CA.dir
+  OBJECT_DIR = CMakeFiles/RandomValidation.dir
+  OBJECT_FILE_DIR = CMakeFiles/RandomValidation.dir
 
 
 # =============================================================================
-# Link build statements for EXECUTABLE target K--CA
+# Link build statements for EXECUTABLE target RandomValidation
 
 
 #############################################
-# Link the executable K--CA
+# Link the executable RandomValidation
 
-build K--CA: CXX_EXECUTABLE_LINKER__K--CA_Debug CMakeFiles/K--CA.dir/Blockchain.cpp.o CMakeFiles/K--CA.dir/Block.cpp.o CMakeFiles/K--CA.dir/Cache.cpp.o CMakeFiles/K--CA.dir/Sealer.cpp.o CMakeFiles/K--CA.dir/sha256.cpp.o CMakeFiles/K--CA.dir/ViewState.cpp.o CMakeFiles/K--CA.dir/Message.cpp.o CMakeFiles/K--CA.dir/Network.cpp.o CMakeFiles/K--CA.dir/Node.cpp.o CMakeFiles/K--CA.dir/RandomValidation.cpp.o CMakeFiles/K--CA.dir/Committee_.cpp.o
+build RandomValidation: CXX_EXECUTABLE_LINKER__RandomValidation_Debug CMakeFiles/RandomValidation.dir/Blockchain.cpp.o CMakeFiles/RandomValidation.dir/Block.cpp.o CMakeFiles/RandomValidation.dir/Cache.cpp.o CMakeFiles/RandomValidation.dir/Sealer.cpp.o CMakeFiles/RandomValidation.dir/sha256.cpp.o CMakeFiles/RandomValidation.dir/ViewState.cpp.o CMakeFiles/RandomValidation.dir/Message.cpp.o CMakeFiles/RandomValidation.dir/Network.cpp.o CMakeFiles/RandomValidation.dir/Node.cpp.o CMakeFiles/RandomValidation.dir/RandomValidation.cpp.o CMakeFiles/RandomValidation.dir/Committee.cpp.o
   FLAGS = -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk
-  OBJECT_DIR = CMakeFiles/K--CA.dir
+  OBJECT_DIR = CMakeFiles/RandomValidation.dir
   POST_BUILD = :
   PRE_LINK = :
-  TARGET_FILE = K--CA
-  TARGET_PDB = K--CA.dbg
+  TARGET_FILE = RandomValidation
+  TARGET_PDB = RandomValidation.dbg
 
 # =============================================================================
 # Target aliases.
@@ -176,7 +176,7 @@ build K--CA: CXX_EXECUTABLE_LINKER__K--CA_Debug CMakeFiles/K--CA.dir/Blockchain.
 #############################################
 # Folder: /Users/yao/Documents/GitHub/desktop-tutorial/Randomverification/cmake-build-debug
 
-build all: phony K--CA
+build all: phony RandomValidation
 
 # =============================================================================
 # Built-in targets

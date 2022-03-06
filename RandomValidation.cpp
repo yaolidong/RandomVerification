@@ -1,5 +1,5 @@
 #include "Node.h"
-#include "Committee .h"
+#include "Committee.h"
 #include <random>
 
 typedef network_address_t (*R)[NUMOFMEMBERS];
@@ -72,6 +72,18 @@ int main()
 for (auto it:vec_committee) {
 	it.ShuffleNode(nodes);
 }
+
+
+    //输出委员会的其他成员
+    for (auto & node:nodes)
+    {
+        cout << "节点 ：" << node->GetNodeAdd() << endl;
+        for (auto committee_members:node->_otherCommitteeNodes) {
+            cout<< "其他节点： " << committee_members << " ";
+
+        }
+        cout << endl;
+    }
 
 
 
