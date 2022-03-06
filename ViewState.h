@@ -12,8 +12,6 @@ class ViewState
 
 	enum state_t
 	{
-        NODE_ADMISSION,
-        LEADER_Election,
         SEND_TRANS,//K-ca共识阶段
         COMFIRM_TRANS,
         WAIT_BLOCK,

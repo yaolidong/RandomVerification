@@ -13,7 +13,7 @@ size_t Node::GetTransNum()
 }
 
 void Client::SendRequest(network_address_t dst, Message & msg) {
-    SendMsg(dst, msg);//TODO：暂设置地址为2的节点是主节点，还未做主节点选拔
+    SendMsg(dst, msg);
 }
 void Client::OnRecvMsg(network_address_t src, Message msg) {
 
@@ -63,7 +63,7 @@ void Node::OnRecvMsg(network_address_t src, Message msg)
 
 void Node::SendAll(Message &msg) {
 
-    for(auto dst : _otherNodes)
+    for(auto dst : _otherCommitteeNodes)
     {
         SendMsg(dst,msg);
     }

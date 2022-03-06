@@ -8,8 +8,7 @@
 {
 	enum msg_type_t
 	{
-        ADMISS,
-        ELECT,
+
 		REQUEST,
 		CONFIRM,
 		UNPACK

@@ -19,9 +19,12 @@ void Committee::ShuffleNode(std::vector<std::unique_ptr<Node>> &nodes) {
             {
                 for (auto  iter:GetCommitteeMembers()) {
                     if (node->GetNodeAdd() == iter)
-                        continue;
+                    {
+                        node->committe_seq = sequence;
+                    }
                     else
                     {
+                        node->committe_seq = sequence;
                         node->_otherCommitteeNodes.emplace_back(iter);
                     }
                 }
@@ -54,13 +57,16 @@ std::vector<network_address_t> & Committee::GetCommitteeMembers() {
     return _members;
 }
 
+int Committee::GetCommitteeSeq() {
+    return sequence;
+}
+
 //void Committee::AssignCommittee(Node &node, Message &msg) {
 //
 //}
 ConsensusCommittee::ConsensusCommittee(){
     Committee(0,0,0);
-    whoisleader = 0;
 }
 
-ConsensusCommittee::ConsensusCommittee(int num_members, int seq, network_address_t wism, network_address_t wisl) :
-Committee(num_members, seq, wism),whoisleader(wisl) {}
+ConsensusCommittee::ConsensusCommittee(int num_members, int seq, network_address_t wism) :
+Committee(num_members, seq, wism) {}

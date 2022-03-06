@@ -35,12 +35,14 @@ int main()
     using namespace std::chrono;
     auto start = system_clock::now();
     Client client;
+    ConsensusCommittee cCommittee;
 
 
 
     std::vector<Committee> vec_committee;
     R arr2;
-    network_address_t arr1[Num_Node/NUMOFMEMBERS][NUMOFMEMBERS];
+    int committee_numbers = Num_Node/NUMOFMEMBERS;
+    network_address_t arr1[committee_numbers][NUMOFMEMBERS];
     arr2 = ShuffleNode(arr1);
 
 
@@ -56,28 +58,46 @@ int main()
     }
 
 
-    //创建委员会并记录委员会内节点
-    for (int i = 0; i < Num_Node/NUMOFMEMBERS; ++i) {
 
+    //创建委员会并记录委员会内节点
+    for (int i = 0; i < committee_numbers; ++i) {
         for (int j = 0; j < NUMOFMEMBERS; ++j) {
             if(j == 0)
             {
                 vec_committee.emplace_back(Committee(NUMOFMEMBERS,i+1,arr2[i][0]));
                 cout<<"第 " << i+1 <<" 个委员会的主节点：" << arr2[i][j] << endl;
+                if (i == 0)
+                {
+                    cCommittee = ConsensusCommittee(committee_numbers,0,arr2[i][j]);
+                    cout << "创立共识委员会, 该委员会编号： " <<  cCommittee.GetCommitteeSeq() <<" 该委员会的领导人: " << arr2[i][j] << endl;
+
+                }
+                cCommittee.GetCommitteeMembers().emplace_back(arr2[i][j]);
             }
             vec_committee[i].GetCommitteeMembers().emplace_back(arr2[i][j]);
         }
     }
+    //各节点记录委员会的其他节点
+    for (auto it:vec_committee) {
+        it.ShuffleNode(nodes);
+    }
 
-for (auto it:vec_committee) {
-	it.ShuffleNode(nodes);
-}
-
+    //共识委员会节点统计
+    for (auto it:cCommittee.GetCommitteeMembers())
+    {
+        for (auto & node:nodes) {
+            if (it == node->GetNodeAdd())
+            {
+                node->isLeader = true;
+                //cout << "节点 " << it << " 是主节点。"<<endl;
+            }
+        }
+    }
 
     //输出委员会的其他成员
     for (auto & node:nodes)
     {
-        cout << "节点 ：" << node->GetNodeAdd() << endl;
+        cout << "节点 ：" << node->GetNodeAdd() << " 属于第 " << node->committe_seq << " 委员会。" << endl;
         for (auto committee_members:node->_otherCommitteeNodes) {
             cout<< "其他节点： " << committee_members << " ";
 
@@ -99,10 +119,13 @@ for (auto it:vec_committee) {
         request.d = request.diggest();
         request.m = request.str();
 
+        //交易分片
+        cout << "交易 " << str << " 被分配到第 "<<(uint64_t)(request.d).c_str()%committee_numbers
+        << " 委员会中。"<< endl;
+
         for(int j = 0; j < Num_Node; j++)
         {
             request.r = nodes[j]->iDentity;
-
             client.SendRequest(nodes[j]->GetNodeAddress(),request);
         }
 

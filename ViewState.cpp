@@ -6,8 +6,7 @@
 #include "Node.h"
 
 ViewState::ViewState() {
-        //_state = SEND_TRANS;
-        _state = NODE_ADMISSION;
+        _state = SEND_TRANS;
 }
 
 ViewState::ViewState(const ViewState &vt) {
@@ -23,43 +22,12 @@ ViewState & ViewState::operator=(const ViewState &vt) {
 }
 void ViewState::handle_message(Message msg, Node & node) {
   switch (_state) {
-	case  NODE_ADMISSION: {
-        msg.msg_type = Message::ADMISS;
-        msg.i = node.GetNodeAdd();
-        msg.n = node.GetTransNum();
-        //cout<<"节点 " << node.GetNodeAdd() <<" 进入节点准入阶段！"<<endl;
-//        msg.r =;
-        //cout << msg.r << endl;
-
-        if (msg.n %400== 1) {
-            cout << "节点 " << node.GetNodeAdd() << "即将进入领导人选举阶段。" << endl;
-            }
-        _state = LEADER_Election;
-        node.SendAll(msg);
-        }
-          break;
-	case LEADER_Election:{
-        msg.msg_type = Message::ELECT;
-
-        msg.i = node.GetNodeAdd();
-
-        //节点解决POW，满足条件的进入委员会
-        if (true)
-        {
-
-        }
-        if (msg.n%400 == 1)
-        {
-            cout<<"节点 "<<node.GetNodeAdd() <<"即将进入发送交易阶段。"<<endl;
-        }
-        _state = SEND_TRANS;
-    }
-          break;
     //交易发送阶段：
   case SEND_TRANS: {
     msg.msg_type = Message::CONFIRM;
     msg.i = node.GetNodeAdd();
 
+    //发送给委员会的其他成员
     node.SendAll(msg);
 
     //如果该节点是主节点，则进入交易确认阶段，否则，进入等待区块阶段
@@ -88,7 +56,7 @@ void ViewState::handle_message(Message msg, Node & node) {
     {
       node.GetOutBk();
       cout<<"节点区块同步完成，进入下一个epoch."<<endl;
-      _state = NODE_ADMISSION;
+     // _state = NODE_ADMISSION;
     }
 
   }
@@ -108,7 +76,7 @@ void ViewState::handle_message(Message msg, Node & node) {
           node.SendBlock(bNew);
           node.SendUnpack(msg);
           node.iDentity = node.CalculateEpochRandomness(bNew);
-          _state = NODE_ADMISSION;
+         // _state = NODE_ADMISSION;
           cout<< "主节点发送区块完成，即将进入下一个epoch。"<<endl;
 
 

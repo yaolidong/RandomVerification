@@ -18,6 +18,7 @@ private:
     network_address_t whoismaster;
 public:
     Committee();
+    int GetCommitteeSeq();
     Committee(int num_members, int seq, network_address_t wism);
     std::vector<network_address_t>& GetCommitteeMembers();
 
@@ -31,11 +32,9 @@ public:
 
 class ConsensusCommittee:public Committee{
 private:
-    network_address_t whoisleader;
-
 public:
     ConsensusCommittee();
-    ConsensusCommittee(int num_members, int seq, network_address_t wism, network_address_t wisl);
+    ConsensusCommittee(int num_members, int seq, network_address_t wism);
     void SealerBlock();
     void SendBlock();
 };

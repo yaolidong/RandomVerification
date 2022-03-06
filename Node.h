@@ -31,7 +31,7 @@ class Node : public NetworkNode {
     Blockchain bChain = Blockchain();
     std::vector<network_address_t> _otherNodes;
 
-    bool isLeader;
+
 
     struct key_t {
         network_address_t c;//客户端标识
@@ -52,6 +52,8 @@ class Node : public NetworkNode {
 
 public:
     std::vector<network_address_t> _otherCommitteeNodes;
+    int committe_seq ;
+    bool isLeader;
     string iDentity;
     size_t GetTransNum();
     Blockchain GetBlockChain();
@@ -64,7 +66,6 @@ public:
     void SendAll(Message &msg);
     void SendBlock(Block &bk);
     void SendUnpack(Message &msg);
-
     string CalculateEpochRandomness(Block &bk);
 
 
