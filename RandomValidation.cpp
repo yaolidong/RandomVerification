@@ -1,6 +1,7 @@
 #include "Node.h"
 #include "Committee.h"
 #include <random>
+#include <string>
 
 typedef network_address_t (*R)[NUMOFMEMBERS];
 using std::cout;
@@ -111,6 +112,7 @@ int main()
     {
 
         std::string str;
+		std::string substr;
         str = "Test"+ to_string(i);
         Message request(Message::REQUEST);
         request.t = std::time(nullptr);
@@ -118,9 +120,10 @@ int main()
         request.c = request.i = client.GetNodeAddress();
         request.d = request.diggest();
         request.m = request.str();
-
+		substr = request.d.substr(request.d.length()-2,request.d.length());
         //交易分片
-        cout << "交易 " << str << " 被分配到第 "<<(uint64_t)(request.d).c_str()%committee_numbers
+		cout << substr.c_str() << endl;
+        cout << "交易 " << str << " 被分配到第 "<<(std::atoi(substr.c_str())%committee_numbers)+1
         << " 委员会中。"<< endl;
 
         for(int j = 0; j < Num_Node; j++)
