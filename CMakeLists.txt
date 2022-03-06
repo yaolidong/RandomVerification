@@ -6,14 +6,8 @@ cmake_minimum_required(VERSION 3.17)
 # 声明一个cmake工程
 project(RandomValidation)
 
-
-
-
-
-
-
 set(CMAKE_CXX_STANDARD 14)
-
+set(CMAKE_CXX_FLAGS -pthread)
 set(CMAKE_BUILD_TYPE Debug)
 
 
