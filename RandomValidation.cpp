@@ -37,6 +37,7 @@ int main()
     auto start = system_clock::now();
     Client client;
     ConsensusCommittee cCommittee;
+    int result;
 
 
 
@@ -120,30 +121,40 @@ int main()
         request.c = request.i = client.GetNodeAddress();
         request.d = request.diggest();
         request.m = request.str();
+        request.n = i;
 		substr = request.d.substr(request.d.length()-2,request.d.length());
+        result = (std::atoi(substr.c_str())%committee_numbers)+1;
         //交易分片
-		cout << substr.c_str() << endl;
-        cout << "交易 " << str << " 被分配到第 "<<(std::atoi(substr.c_str())%committee_numbers)+1
-        << " 委员会中。"<< endl;
+        cout << "交易 " << str << " 被分配到第 " << result
+        <<" 委员会中。"<< endl;
 
-        for(int j = 0; j < Num_Node; j++)
-        {
-            request.r = nodes[j]->iDentity;
-            client.SendRequest(nodes[j]->GetNodeAddress(),request);
-        }
 
-        if (i%400 == 0 && i/400 !=0)
-        {
-            while (!Network::instance().Empty())
+        for (auto & node:nodes) {
+            if (result == node->committe_seq)
             {
-                continue;
-            }
-            for(int j = 0; j < Num_Node; j++)
-            {
-                cout<<"节点 " << nodes[j]->GetNodeAdd() << "节点身份码："<< nodes[j]->iDentity <<endl;
-                cout<<"节点 " << nodes[j]->GetNodeAdd() << "属于第 "<<(long )nodes[j]->iDentity.c_str() % 5 <<" 委员会。"<<endl;
+                client.SendRequest(node->GetNodeAdd(),request);
+                cout << "交易尾号 " << result << " 发送至节点 " << node->GetNodeAdd() <<endl;
             }
         }
+
+//        for(int j = 0; j < Num_Node; j++)
+//        {
+//            request.r = nodes[j]->iDentity;
+//   //       client.SendRequest(nodes[j]->GetNodeAddress(),request);
+//        }
+
+//        if (i%400 == 0 && i/400 !=0)
+//        {
+//            while (!Network::instance().Empty())
+//            {
+//                continue;
+//            }
+//            for(int j = 0; j < Num_Node; j++)
+//            {
+//                cout<<"节点 " << nodes[j]->GetNodeAdd() << "节点身份码："<< nodes[j]->iDentity <<endl;
+//                cout<<"节点 " << nodes[j]->GetNodeAdd() << "属于第 "<<(long )nodes[j]->iDentity.c_str() % 5 <<" 委员会。"<<endl;
+//            }
+//        }
 
     }
 

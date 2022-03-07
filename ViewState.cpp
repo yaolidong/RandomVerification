@@ -24,29 +24,26 @@ void ViewState::handle_message(Message msg, Node & node) {
   switch (_state) {
     //交易发送阶段：
   case SEND_TRANS: {
+      //交易验证正确后，转发给委员会其他节点
     msg.msg_type = Message::CONFIRM;
     msg.i = node.GetNodeAdd();
-
-    //发送给委员会的其他成员
+    cout << "节点 " << node.GetNodeAdd() << " 接收到" << msg.o
+    << " 并转发给委员会其他成员"<<endl;
     node.SendAll(msg);
 
     //如果该节点是主节点，则进入交易确认阶段，否则，进入等待区块阶段
-    if (node.GetNodeAdd() == 2)
-    {
-        if (msg.n%400 == 1)
-        {
-            cout<<"主节点 "<<node.GetNodeAdd() <<"即将进入交易确认阶段。"<<endl;
-        }
-        _state = COMFIRM_TRANS;
-    }
-
-    else {
-        if (msg.n%400 == 1)
-        {
-            cout<<"节点 "<<node.GetNodeAdd() <<"即将进入等待区块阶段。"<<endl;
-        }
-      _state = WAIT_BLOCK;
-    }
+      if (node.isLeader)
+      {
+          _state = COMFIRM_TRANS;
+          cout<<"第 " << node.committe_seq
+          <<" 委员会主节点: "<<node.GetNodeAdd() <<"即将进入交易确认阶段。"<<endl;
+      }
+      else
+      {
+            _state = WAIT_BLOCK;
+          cout<<"第 " << node.committe_seq
+              <<" 委员会节点: "<<node.GetNodeAdd() <<"即将进入交易等待阶段。"<<endl;
+      }
   }
   break;
   //区块等待阶段：主节点将区块分发给其他节点，网络区块同步
@@ -65,28 +62,38 @@ void ViewState::handle_message(Message msg, Node & node) {
   //不然，则进入等待交易模式
   case COMFIRM_TRANS: {
     if (msg.msg_type == Message::CONFIRM) {
+        cout << "主节点 " << node.GetNodeAdd() << "接收到确认信息" << endl;
       accepted_confirm++;
     }
     if (accepted_confirm == k_value)
     {
+        cout << "主节点 " << node.GetNodeAdd() << "接收到的确认信息：" <<accepted_confirm << endl;
+        cout << msg.o << " 添加进交易池。"<< endl;
+
+
         node.TransToCache(msg);
-        Block bNew = node.SealTrans();//交易打包进区块中
-        if ((msg.n+1)%400 == 0)
-        {
-          node.SendBlock(bNew);
-          node.SendUnpack(msg);
-          node.iDentity = node.CalculateEpochRandomness(bNew);
-         // _state = NODE_ADMISSION;
-          cout<< "主节点发送区块完成，即将进入下一个epoch。"<<endl;
 
+        _state = PBFT_CONSENSUS;
 
-        }
-        else
-          _state = WAIT_BLOCK;
     }
   }
   break;
-  case SEND_BLOCK:
+  case PBFT_CONSENSUS:
+  {
+      if ((msg.n+1)%400 == 0)
+      {
+          //TODO:交易整合打包
+          Block bNew = node.SealTrans();//交易打包进区块中
+
+          node.SendBlock(bNew);
+          node.SendUnpack(msg);
+//          node.iDentity = node.CalculateEpochRandomness(bNew);
+          cout<< "主节点发送区块完成，即将进入下一个epoch。"<<endl;
+      }
+      else
+          _state = WAIT_BLOCK;
+  }
+
     break;
   }
 }

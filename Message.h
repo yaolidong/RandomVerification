@@ -16,11 +16,11 @@
 
 	std::string o;
 	time_t t;
-	network_address_t c = 0;
+	network_address_t c = 0;//交易发送方IP地址
 	std::string d;
 	size_t v = 0;
 	size_t n = 0;
-	network_address_t i = 0;
+	network_address_t i = 0;//消息发送方IP地址
     std::string m;
      std::string r;//epochRandomness
 

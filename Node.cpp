@@ -55,7 +55,9 @@ void Node::OnRecvMsg(network_address_t src, Message msg)
       std::cout <<"节点：" <<GetNodeAdd() << "找不到交易信息视图！"<< std::endl;
     }
     else
-      iter->second.handle_message(msg, *this);
+    {
+        iter->second.handle_message(msg, *this);
+    }
   }
 
 
@@ -145,7 +147,7 @@ Block Node::SealTrans() {
     return bNew;
 }
 void Node::SendBlock(Block &bk) {
-  for(auto dst : _otherNodes)
+  for(auto dst : _otherCommitteeNodes)
   {
     NetworkNode::SendBlock(dst,bk);
   }
