@@ -97,15 +97,15 @@ int main()
     }
 
     //输出委员会的其他成员
-    for (auto & node:nodes)
-    {
-        cout << "节点 ：" << node->GetNodeAdd() << " 属于第 " << node->committe_seq << " 委员会。" << endl;
-        for (auto committee_members:node->_otherCommitteeNodes) {
-            cout<< "其他节点： " << committee_members << " ";
-
-        }
-        cout << endl;
-    }
+//    for (auto & node:nodes)
+//    {
+//        cout << "节点 ：" << node->GetNodeAdd() << " 属于第 " << node->committe_seq << " 委员会。" << endl;
+//        for (auto committee_members:node->_otherCommitteeNodes) {
+//            cout<< "其他节点： " << committee_members << " ";
+//
+//        }
+//        cout << endl;
+//    }
 
 
 

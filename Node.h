@@ -14,6 +14,8 @@
 #include "ViewState.h"
 
 //客户端
+
+class Committee;
 class Client : public NetworkNode {
     std::map<std::string ,int> accepted_reply;
 public:

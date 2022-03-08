@@ -38,4 +38,4 @@ add_executable(RandomValidation
         RandomValidation.h
         RandomValidation.cpp
         Committee.h
-        Committee.cpp)
+        Committee.cpp PBFT.h PBFT.cpp)

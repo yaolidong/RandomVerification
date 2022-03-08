@@ -1,0 +1,8 @@
+//
+// Created by 姚黎东 on 2022/3/8.
+//
+
+#ifndef RANDOMVALIDATION_PBFT_H
+#define RANDOMVALIDATION_PBFT_H
+
+#endif //RANDOMVALIDATION_PBFT_H
