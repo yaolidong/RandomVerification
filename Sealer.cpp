@@ -14,7 +14,7 @@ bool Sealer::IsCacheEmpty(Cache & ca) {
     return ca.GetTransQueue().empty();
 }
 
-void  Sealer::CalculateMerkRoot(Cache & ca,Blockchain & bc)  {
+void  Sealer::CalculateMerkRoot(Cache & ca)  {
     if(!IsCacheEmpty(ca))
     {
         trans_count++;
@@ -22,14 +22,15 @@ void  Sealer::CalculateMerkRoot(Cache & ca,Blockchain & bc)  {
         std::stringstream ss;
         str = ca.GetTransQueue().front().diggest();
         ca.PopTransQueue();
+        ReduceCount();
         ss << merkle_root << str;
         merkle_root = sha256(ss.str());
     }
 
 }
 
-Block Sealer::Upchain(Blockchain & bc) {
-        Block bNew = Block(bc.GetBlockIndex(),"",merkle_root);
+BigBlock Sealer::Upchain(Blockchain & bc) {
+        BigBlock bNew = BigBlock(bc.GetBlockIndex(),"",merkle_root);
         bNew = bc.AddBlock(bNew);
         bc.BlockIndexAdd();
         return bNew;
@@ -40,7 +41,7 @@ size_t Sealer::GetTransCount() const{
 }
 
 void Sealer::ReduceCount() {
-    trans_count -= 400;
+    trans_count--;
 
 }
 

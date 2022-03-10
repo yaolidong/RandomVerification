@@ -1,9 +1,10 @@
 //
 // Created by 姚黎东 on 2022/3/3.
 //
+#include <sstream>
 #include "Committee.h"
 
-Committee::Committee():number_members(0),sequence(0),whoismaster(0) {}
+Committee::Committee():number_members(0),number_trans(0),sequence(0),whoismaster(0) {}
 
 Committee::Committee(int num_members, int seq, network_address_t wism) {
     number_members = num_members;
@@ -61,6 +62,15 @@ int Committee::GetCommitteeSeq() {
     return sequence;
 }
 
+std::vector<network_address_t> Committee::GetMembers() {
+    return _members;
+}
+
+network_address_t Committee::GetLeaderAddress() {
+    return whoismaster;
+}
+
+
 //void Committee::AssignCommittee(Node &node, Message &msg) {
 //
 //}
@@ -70,3 +80,35 @@ ConsensusCommittee::ConsensusCommittee(){
 
 ConsensusCommittee::ConsensusCommittee(int num_members, int seq, network_address_t wism) :
 Committee(num_members, seq, wism) {}
+
+ConsensusCommittee &ConsensusCommittee::instance() {
+    static ConsensusCommittee  inst;
+    return inst;
+}
+
+void ConsensusCommittee::PBFT(Message msg) {
+
+}
+
+
+void ConsensusCommittee::SealerBlock(std::vector<std::unique_ptr<Node>> &nodes) {
+    BigBlock bNew;
+    std::stringstream ss;
+    for (auto iter:vec_blocks) {
+        ss << iter._bHash;
+    }
+    bNew._bHash = sha256(ss.str());
+    bNew = sl.Upchain(bChain);//区块上链
+    return bNew;
+
+}
+void ConsensusCommittee::SendBigBlock(std::vector<std::unique_ptr<Node>> &nodes) {
+    for (auto &  node:nodes) {
+        //TODO:发送大区块
+      Network::instance().SendBigBlock(GetLeaderAddress(),node->GetNodeAdd(),bigBlock);
+      cout << "Master节点发送大区块给节点 " << node->GetNodeAdd() << endl;
+    }
+
+}
+
+

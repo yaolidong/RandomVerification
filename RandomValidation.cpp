@@ -36,7 +36,7 @@ int main()
     using namespace std::chrono;
     auto start = system_clock::now();
     Client client;
-    ConsensusCommittee cCommittee;
+
     int result;
 
 
@@ -70,11 +70,11 @@ int main()
                 cout<<"第 " << i+1 <<" 个委员会的主节点：" << arr2[i][j] << endl;
                 if (i == 0)
                 {
-                    cCommittee = ConsensusCommittee(committee_numbers,0,arr2[i][j]);
-                    cout << "创立共识委员会, 该委员会编号： " <<  cCommittee.GetCommitteeSeq() <<" 该委员会的领导人: " << arr2[i][j] << endl;
+                    ConsensusCommittee::instance() = ConsensusCommittee(committee_numbers,0,arr2[i][j]);
+                    cout << "创立共识委员会, 该委员会编号： " <<  ConsensusCommittee::instance().GetCommitteeSeq() <<" 该委员会的领导人: " << arr2[i][j] << endl;
 
                 }
-                cCommittee.GetCommitteeMembers().emplace_back(arr2[i][j]);
+                ConsensusCommittee::instance().GetCommitteeMembers().emplace_back(arr2[i][j]);
             }
             vec_committee[i].GetCommitteeMembers().emplace_back(arr2[i][j]);
         }
@@ -85,27 +85,27 @@ int main()
     }
 
     //共识委员会节点统计
-    for (auto it:cCommittee.GetCommitteeMembers())
+    for (auto it:ConsensusCommittee::instance().GetCommitteeMembers())
     {
         for (auto & node:nodes) {
             if (it == node->GetNodeAdd())
             {
                 node->isLeader = true;
-                //cout << "节点 " << it << " 是主节点。"<<endl;
+                cout << "节点 " << it << " 是主节点。"<<endl;
             }
         }
     }
 
     //输出委员会的其他成员
-//    for (auto & node:nodes)
-//    {
-//        cout << "节点 ：" << node->GetNodeAdd() << " 属于第 " << node->committe_seq << " 委员会。" << endl;
-//        for (auto committee_members:node->_otherCommitteeNodes) {
-//            cout<< "其他节点： " << committee_members << " ";
-//
-//        }
-//        cout << endl;
-//    }
+    for (auto & node:nodes)
+    {
+        cout << "节点 ：" << node->GetNodeAdd() << " 属于第 " << node->committe_seq << " 委员会。" << endl;
+        for (auto committee_members:node->_otherCommitteeNodes) {
+            cout<< "其他节点： " << committee_members << " ";
+
+        }
+        cout << endl;
+    }
 
 
 
@@ -135,6 +135,9 @@ int main()
                 client.SendRequest(node->GetNodeAdd(),request);
                 cout << "交易尾号 " << result << " 发送至节点 " << node->GetNodeAdd() <<endl;
             }
+        }
+        for (auto) {
+
         }
 
 //        for(int j = 0; j < Num_Node; j++)

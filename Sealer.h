@@ -14,16 +14,17 @@
 
 class Sealer{
 public:
+    std::string merkle_root;
     Sealer();
      bool IsCacheEmpty(Cache & ca) ;
-    void CalculateMerkRoot(Cache & ca, Blockchain & bc);
-    Block Upchain(Blockchain & bc);
+    void CalculateMerkRoot(Cache & ca);
+    BigBlock Upchain(Blockchain & bc);
     size_t GetTransCount() const;
     void ReduceCount();
 
 private:
     std::string str;
     size_t trans_count = 0;
-    std::string merkle_root;
+
 };
 #endif //K_CA_SEALER_H

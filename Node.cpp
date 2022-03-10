@@ -136,20 +136,29 @@ void Node::TransToCache(Message &msg) {
     ca.AddTranslation(msg);
 }
 
+
+//TODO:设置一个交易打包阈值
 Block Node::SealTrans() {
-    sl.CalculateMerkRoot(ca,bChain);
     Block bNew;
-    if(400 == sl.GetTransCount())
+    sl.CalculateMerkRoot(ca);
+    if (sl.IsCacheEmpty(ca))
     {
-        bNew = sl.Upchain(bChain);//区块上链
-        sl.ReduceCount();//交易池计数器
+        bNew = Block(sl.merkle_root);
+        bNew._bHash = bNew.CalculateBlockHash();
     }
     return bNew;
 }
-void Node::SendBlock(Block &bk) {
+
+BigBlock Node::SealBlocks() {
+    BigBlock bNew;
+
+    bNew = sl.Upchain(bChain);//区块上链
+    return bNew;
+}
+void Node::SendBigBlock(BigBlock &bk) {
   for(auto dst : _otherCommitteeNodes)
   {
-    NetworkNode::SendBlock(dst,bk);
+    NetworkNode::SendBigBlock(dst,bk);
   }
 }
 
@@ -160,7 +169,7 @@ void Node::GetOutBk() {
   //区块池不为空，则添加区块
   if (!Network::instance().List_Blocks())
   {
-     bka = Network::instance().RecvBlock(GetNodeAdd());
+     bka = Network::instance().RecvBigBlock(GetNodeAdd());
      bChain.AddBlock(bka.bk);
      //其他节点接收到主节点的区块，
 //     if (GetNodeAdd() == 3)

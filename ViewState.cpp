@@ -69,28 +69,21 @@ void ViewState::handle_message(Message msg, Node & node) {
     {
         cout << "主节点 " << node.GetNodeAdd() << "接收到的确认信息：" <<accepted_confirm << endl;
         cout << msg.o << " 添加进交易池。"<< endl;
-
-
         node.TransToCache(msg);
-
         _state = PBFT_CONSENSUS;
-
     }
   }
   break;
   case PBFT_CONSENSUS:
   {
-      if ((msg.n+1)%400 == 0)
-      {
+      cout << "主节点 " << node.GetNodeAdd() << "进入PBFT共识阶段" << endl;
           //TODO:交易整合打包
-          Block bNew = node.SealTrans();//交易打包进区块中
+          BigBlock bNew = node.SealBlocks();//交易打包进区块中
 
-          node.SendBlock(bNew);
+          node.SendBigBlock(bNew);
           node.SendUnpack(msg);
 //          node.iDentity = node.CalculateEpochRandomness(bNew);
           cout<< "主节点发送区块完成，即将进入下一个epoch。"<<endl;
-      }
-      else
           _state = WAIT_BLOCK;
   }
 

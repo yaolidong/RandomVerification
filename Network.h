@@ -21,7 +21,7 @@ struct MessageAddressed{
 struct BlockAddressed{
   network_address_t src;
   network_address_t dst;
-  Block bk;
+  BigBlock bk;
 };
 
 //P2P网络
@@ -38,9 +38,9 @@ public:
     bool Empty();
     bool List_Blocks();
     void SendMsg(network_address_t src, network_address_t dst, Message msg);
-    void SendBlock(network_address_t src, network_address_t dst, Block bk);
+    void SendBigBlock(network_address_t src, network_address_t dst, BigBlock bk);
     MessageAddressed RecvMsg(network_address_t dst);
-    BlockAddressed RecvBlock(network_address_t dst);
+    BlockAddressed RecvBigBlock(network_address_t dst);
     network_address_t  AssignAddress();
 };
 
@@ -55,6 +55,6 @@ public:
     network_address_t GetNodeAddress() const;
     virtual void OnRecvMsg(network_address_t src, Message msg) = 0;
     void SendMsg(network_address_t dst, Message msg);
-    void SendBlock(network_address_t dst, Block bk);
+    void SendBigBlock(network_address_t dst, BigBlock bk);
 };
 #endif

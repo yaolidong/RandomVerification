@@ -5,11 +5,24 @@
 #include <ctime>
 using namespace std;
 
-Block::Block(uint32_t bIndexIn,const string & bDataIn, string merkroot):_bIndex(bIndexIn),_bData(bDataIn){
-    merkle_root = merkroot;
+Block::Block(uint32_t bIndexIn,const string & bDataIn, string merkleroot):_bIndex(bIndexIn),_bData(bDataIn){
+    merkle_root = merkleroot;
 	_bNonce = -1;
 	_cTime = time(nullptr);
 }
+
+//TODO:
+Block::Block(string &merkleroot) {
+    _cTime = time(nullptr);
+    _bIndex = 0;
+    _bNonce = 0;
+    _bData = "";
+    merkle_root = merkleroot;
+}
+
+Block::Block() =default;
+
+
 
 string Block::GetHash()
 {
@@ -30,4 +43,38 @@ uint32_t Block::GetBIndex() {
 string Block::GetMerkleRoot() const {
     return merkle_root;
 }
-Block::Block() =default;
+
+
+BigBlock::BigBlock() {
+    merkle_root = "";
+    _bNonce = 0;
+    _cTime = time(nullptr);
+    _bIndex ++;
+
+}
+
+void BigBlock::SealerBlock() {
+    stringstream ss;
+    for (auto iter:vec_blocks) {
+        ss << iter.GetBIndex();
+    }
+
+}
+
+//BigBlock::BigBlock(string & merkleroot) {
+//    merkle_root = merkleroot;
+//    _bNonce = 0;
+//    _cTime = time(nullptr);
+//    _bIndex ++;
+//
+//}
+
+BigBlock::BigBlock(uint32_t bIndexIn, const string &bDataIn, string merkleroot) {
+    _bIndex = bIndexIn;
+    _bData = bDataIn;
+    merkle_root = merkleroot;
+    _cTime = time(nullptr);
+    _bNonce = -1;
+
+}
+

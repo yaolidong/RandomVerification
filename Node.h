@@ -52,22 +52,26 @@ class Node : public NetworkNode {
     size_t _seq = 0;
     size_t _view = 0;
 
+
 public:
     std::vector<network_address_t> _otherCommitteeNodes;
     int committe_seq ;
     bool isLeader;
+    bool isBoss;
     string iDentity;
     size_t GetTransNum();
     Blockchain GetBlockChain();
     void TransToCache(Message &msg);
     Block SealTrans();
+    BigBlock SealBlocks();
     network_address_t  GetNodeAdd();
     void SetAllNodes(const std::vector<std::unique_ptr<Node>> & allNodes);
     void OnRecvMsg(network_address_t src, Message msg) override;
     void GetOutBk();
     void SendAll(Message &msg);
-    void SendBlock(Block &bk);
+    void SendBigBlock(BigBlock &bk);
     void SendUnpack(Message &msg);
+
     string CalculateEpochRandomness(Block &bk);
 
 

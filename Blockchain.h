@@ -13,15 +13,15 @@ class Blockchain{
     size_t _bIndex = 1;
 public:
     Blockchain();
-    Block AddBlock(Block bNew);
+    BigBlock AddBlock(BigBlock bNew);
     size_t GetBlockIndex() const;
     void BlockIndexAdd();
     string GetRandomness();
 private:
     //uint32_t _mDifficulty;
-    vector<Block> _bChain;
+    vector<BigBlock> _bChain;
     string _ePochRandomness;
-    Block GetLastBlock() const;
+    BigBlock GetLastBlock() const;
 
 };
 

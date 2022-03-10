@@ -9,10 +9,10 @@
 
 Blockchain::Blockchain()
 {
-	_bChain.emplace_back(Block(_bIndex,"Genesis Block", ""));
+	_bChain.emplace_back(BigBlock(_bIndex,"Genesis Block", ""));
 }
 
-Block Blockchain::AddBlock(Block bNew)
+BigBlock Blockchain::AddBlock(BigBlock bNew)
 {
 	bNew.bPrevHash = GetLastBlock().GetHash();
     bNew._bHash = bNew.CalculateBlockHash();
@@ -22,7 +22,7 @@ Block Blockchain::AddBlock(Block bNew)
     return bNew;
 }
 
-Block Blockchain::GetLastBlock() const
+BigBlock Blockchain::GetLastBlock() const
 {
 	return _bChain.back();//返回向量中的最后一个元素
 }
