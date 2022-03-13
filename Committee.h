@@ -5,47 +5,50 @@
 #ifndef K_CA_COMMITTEE_H
 #define K_CA_COMMITTEE_H
 
-//#include "Message.h"
-#include "Node.h"
+
+#include "Block.h"
+#include "Message.h"
+//#include "Node.h"
+//#include "Network.h"
 #include <algorithm>
 #include <random>
+
+
+class Node;
 
 
 
 class Committee{
 private:
     int number_members;
-    int number_trans;
-    int sequence;
-    std::vector<network_address_t> _members;
-    network_address_t whoismaster;
+    std::vector<int> _members;
+    int whoismaster;
+    vector<Message>_translations;
 public:
-
+    int sequence;
     Committee();
-    int GetCommitteeSeq();
-    std::vector<network_address_t> GetMembers();
-    Committee(int num_members, int seq, network_address_t wism);
-    std::vector<network_address_t>& GetCommitteeMembers();
-    network_address_t GetLeaderAddress();
-    void ShuffleNode(std::vector<std::unique_ptr<Node>> &nodes);
-
-
-
+    vector<Message> & GetTranslations();
+    std::vector<int> GetMembers();
+    Committee(int num_members, int seq, int wism);
+    std::vector<int>& GetCommitteeMembers();
+    int GetLeaderAddress();
+    int GetWhoisMaster();
+    void ShuffleNode(std::unique_ptr<Node> & node);
 
 };
 
 
 class ConsensusCommittee:public Committee{
 private:
-    vector<Block>vec_blocks;
-    BigBlock bigBlock;
 public:
+    vector<Block>vec_blocks;
     static ConsensusCommittee & instance();
     ConsensusCommittee();
-    ConsensusCommittee(int num_members, int seq, network_address_t wism);
+    ConsensusCommittee(int num_members, int seq, int wism);
     void PBFT(Message msg);
-    void SealerBlock(std::vector<std::unique_ptr<Node>> &nodes);
-    void SendBigBlock(std::vector<std::unique_ptr<Node>> &nodes);
+    //打包大区块
+    BigBlock SealerBlock();
+    void SendBigBlock(Node & node, BigBlock & bBlk);
 };
 
 #endif //K_CA_COMMITTEE_H

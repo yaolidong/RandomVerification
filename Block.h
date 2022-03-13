@@ -31,13 +31,18 @@ protected:
 
 class BigBlock:public Block{
 private:
+
 std::vector<Block> vec_blocks;
 public:
+    uint32_t _bBIndex = 0;
     BigBlock();
+
     BigBlock(uint32_t bIndexIn, const string & bDataIn,string merkleroot);
+
 //    explicit BigBlock(string & merkleroot);
 //    BigBlock(std::vector<Block> vec_blocks);
-    void SealerBlock();
+
+    void AddMicroBlock(Block & blk);
 
 };
 #endif

@@ -33,9 +33,11 @@ add_executable(RandomValidation
         Message.cpp
         Network.h
         Network.cpp
+        Committee.h
+        Committee.cpp
         Node.h
         Node.cpp
         RandomValidation.h
         RandomValidation.cpp
-        Committee.h
-        Committee.cpp PBFT.h PBFT.cpp)
+        PBFT.h
+        PBFT.cpp)

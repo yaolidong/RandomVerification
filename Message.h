@@ -11,7 +11,8 @@
 
 		REQUEST,
 		CONFIRM,
-		UNPACK
+		UNPACK,
+
 	}msg_type;
 
 	std::string o;

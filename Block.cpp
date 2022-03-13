@@ -53,12 +53,8 @@ BigBlock::BigBlock() {
 
 }
 
-void BigBlock::SealerBlock() {
-    stringstream ss;
-    for (auto iter:vec_blocks) {
-        ss << iter.GetBIndex();
-    }
-
+void BigBlock::AddMicroBlock(Block &blk) {
+   vec_blocks.emplace_back(blk);
 }
 
 //BigBlock::BigBlock(string & merkleroot) {

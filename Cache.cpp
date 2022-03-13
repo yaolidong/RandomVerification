@@ -9,7 +9,7 @@ void Cache::AddTranslation(Message & tr) {
 }
 
 
-std::queue<Message> Cache::GetTransQueue() {
+std::queue<Message> & Cache::GetTransQueue() {
     return _trans_que;
 }
 

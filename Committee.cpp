@@ -3,18 +3,18 @@
 //
 #include <sstream>
 #include "Committee.h"
+#include "Node.h"
 
-Committee::Committee():number_members(0),number_trans(0),sequence(0),whoismaster(0) {}
+Committee::Committee():number_members(0),sequence(0),whoismaster(0) {}
 
 Committee::Committee(int num_members, int seq, network_address_t wism) {
-    number_members = num_members;
+    num_members = num_members;
     sequence = seq;
     whoismaster = wism;
 }
 
-void Committee::ShuffleNode(std::vector<std::unique_ptr<Node>> &nodes) {
+void Committee::ShuffleNode(std::unique_ptr<Node> & node) {
 
-    for (auto &node:nodes) {
         for (auto it:GetCommitteeMembers()) {
             if (node->GetNodeAdd() == it)
             {
@@ -22,6 +22,7 @@ void Committee::ShuffleNode(std::vector<std::unique_ptr<Node>> &nodes) {
                     if (node->GetNodeAdd() == iter)
                     {
                         node->committe_seq = sequence;
+
                     }
                     else
                     {
@@ -31,26 +32,6 @@ void Committee::ShuffleNode(std::vector<std::unique_ptr<Node>> &nodes) {
                 }
             }
         }
-    }
-//    int num_committee = Num_Node/NUMOFMEMBERS;
-//
-//    //节点分配委员会，并保存所在委员会中其他节点
-//    for (int l = 0; l < Num_Node; ++l) {
-//        for (int i = 0; i < num_committee; ++i) {
-//            for (int j = 0; j < NUMOFMEMBERS; ++j) {
-//                if (nodes[l]->GetNodeAdd() == arr1[i][j])
-//                {
-//                    for (int k = 0; k < NUMOFMEMBERS; ++k) {
-//                        if (arr1[i][k] == nodes[l]->GetNodeAdd())
-//                            continue;
-//                        else
-//                            nodes[l]->_otherCommitteeNodes.push_back(arr1[i][k]);
-//                    }
-//                }
-//            }
-//
-//        }
-//    }
 
 }
 
@@ -58,8 +39,8 @@ std::vector<network_address_t> & Committee::GetCommitteeMembers() {
     return _members;
 }
 
-int Committee::GetCommitteeSeq() {
-    return sequence;
+vector<Message> & Committee::GetTranslations()  {
+    return _translations;
 }
 
 std::vector<network_address_t> Committee::GetMembers() {
@@ -67,6 +48,10 @@ std::vector<network_address_t> Committee::GetMembers() {
 }
 
 network_address_t Committee::GetLeaderAddress() {
+    return whoismaster;
+}
+
+network_address_t Committee::GetWhoisMaster() {
     return whoismaster;
 }
 
@@ -91,23 +76,24 @@ void ConsensusCommittee::PBFT(Message msg) {
 }
 
 
-void ConsensusCommittee::SealerBlock(std::vector<std::unique_ptr<Node>> &nodes) {
-    BigBlock bNew;
+BigBlock  ConsensusCommittee::SealerBlock() {
+    BigBlock bigBlock;
     std::stringstream ss;
     for (auto iter:vec_blocks) {
         ss << iter._bHash;
+        bigBlock.AddMicroBlock(iter);//将每个委员会的区块都装进大区块中
     }
-    bNew._bHash = sha256(ss.str());
-    bNew = sl.Upchain(bChain);//区块上链
-    return bNew;
-
+    bigBlock._bHash = sha256(ss.str());
+    return bigBlock;
 }
-void ConsensusCommittee::SendBigBlock(std::vector<std::unique_ptr<Node>> &nodes) {
-    for (auto &  node:nodes) {
+void ConsensusCommittee::SendBigBlock(Node & node,BigBlock & bBlk) {
         //TODO:发送大区块
-      Network::instance().SendBigBlock(GetLeaderAddress(),node->GetNodeAdd(),bigBlock);
-      cout << "Master节点发送大区块给节点 " << node->GetNodeAdd() << endl;
-    }
+
+        if (node.GetNodeAdd() == GetWhoisMaster())
+        {
+            Network::instance().SendBigBlock(GetLeaderAddress(),node.GetNodeAdd(),bBlk);
+            cout << "共识委员会：" << sequence << "Master节点" << GetWhoisMaster() << "发送大区块给节点 " << node.GetNodeAdd() << endl;
+        }
 
 }
 

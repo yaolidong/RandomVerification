@@ -12,7 +12,7 @@
 class Cache{
 public:
     void AddTranslation (Message & tr);
-    std::queue<Message>GetTransQueue();
+    std::queue<Message> & GetTransQueue();
     void PopTransQueue();
 
 private:

@@ -20,7 +20,6 @@ public:
     void CalculateMerkRoot(Cache & ca);
     BigBlock Upchain(Blockchain & bc);
     size_t GetTransCount() const;
-    void ReduceCount();
 
 private:
     std::string str;

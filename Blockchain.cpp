@@ -16,7 +16,10 @@ BigBlock Blockchain::AddBlock(BigBlock bNew)
 {
 	bNew.bPrevHash = GetLastBlock().GetHash();
     bNew._bHash = bNew.CalculateBlockHash();
+    BlockIndexAdd();
+    bNew._bBIndex = GetBlockIndex();
     _ePochRandomness = bNew._bHash;
+
 //    cout<<"_ePochRandomness = " << _ePochRandomness <<endl;
 	_bChain.push_back(bNew);
     return bNew;

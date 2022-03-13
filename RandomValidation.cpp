@@ -71,7 +71,7 @@ int main()
                 if (i == 0)
                 {
                     ConsensusCommittee::instance() = ConsensusCommittee(committee_numbers,0,arr2[i][j]);
-                    cout << "创立共识委员会, 该委员会编号： " <<  ConsensusCommittee::instance().GetCommitteeSeq() <<" 该委员会的领导人: " << arr2[i][j] << endl;
+                    cout << "创立共识委员会, 该委员会编号： " <<  ConsensusCommittee::instance().sequence <<" 该委员会的领导人: " << arr2[i][j] << endl;
 
                 }
                 ConsensusCommittee::instance().GetCommitteeMembers().emplace_back(arr2[i][j]);
@@ -79,9 +79,13 @@ int main()
             vec_committee[i].GetCommitteeMembers().emplace_back(arr2[i][j]);
         }
     }
+
     //各节点记录委员会的其他节点
     for (auto it:vec_committee) {
-        it.ShuffleNode(nodes);
+        for (auto & node:nodes) {
+            it.ShuffleNode(node);
+        }
+
     }
 
     //共识委员会节点统计
@@ -91,7 +95,7 @@ int main()
             if (it == node->GetNodeAdd())
             {
                 node->isLeader = true;
-                cout << "节点 " << it << " 是主节点。"<<endl;
+//                cout << "节点 " << it << " 是主节点。"<<endl;
             }
         }
     }
@@ -109,12 +113,11 @@ int main()
 
 
 
-    for(int i = 0; i < NUMOFTRANS; i++)
-    {
+    for(int i = 0; i < NUMOFTRANS; i++) {
 
         std::string str;
-		std::string substr;
-        str = "Test"+ to_string(i);
+        std::string substr;
+        str = "Test" + to_string(i);
         Message request(Message::REQUEST);
         request.t = std::time(nullptr);
         request.o = str;
@@ -122,24 +125,29 @@ int main()
         request.d = request.diggest();
         request.m = request.str();
         request.n = i;
-		substr = request.d.substr(request.d.length()-2,request.d.length());
-        result = (std::atoi(substr.c_str())%committee_numbers)+1;
+        substr = request.d.substr(request.d.length() - 2, request.d.length());
+        result = (std::atoi(substr.c_str()) % committee_numbers) + 1;
+
+
         //交易分片
-        cout << "交易 " << str << " 被分配到第 " << result
-        <<" 委员会中。"<< endl;
 
-
-        for (auto & node:nodes) {
-            if (result == node->committe_seq)
+        for (auto & iter:vec_committee) {
+            if (iter.sequence == result)
             {
-                client.SendRequest(node->GetNodeAdd(),request);
-                cout << "交易尾号 " << result << " 发送至节点 " << node->GetNodeAdd() <<endl;
+                iter.GetTranslations().emplace_back(request);
+                cout << "交易 " << str << " 被分配到第 " << iter.sequence
+                     << " 委员会中。" << endl;
+                if (!iter.GetTranslations().empty())
+                    cout << "第" << iter.sequence << "委员会拥有 " << iter.GetTranslations().size() << " 交易。 "  << endl;
             }
         }
-        for (auto) {
 
+        for (auto &node: nodes) {
+            if (result == node->committe_seq) {
+                client.SendRequest(node->GetNodeAdd(), request);
+                cout << "第 " << i<< " 交易,其尾号 " << result << " 发送至节点 " << node->GetNodeAdd() << endl;
+            }
         }
-
 //        for(int j = 0; j < Num_Node; j++)
 //        {
 //            request.r = nodes[j]->iDentity;
@@ -159,8 +167,18 @@ int main()
 //            }
 //        }
 
+
     }
 
+    for (auto & iter:vec_committee) {
+        cout <<  "委员会： " << iter.sequence << "总共拥有 " << iter.GetTranslations().size()  << "交易。"<<endl;
+        for (auto  & node: nodes) {
+            if (iter.sequence == node->committe_seq)
+            {
+                node->committee_trans = iter.GetTranslations().size();
+            }
+        }
+    }
 
     while (!Network::instance().Empty())
         std::this_thread::sleep_for(1s);

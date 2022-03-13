@@ -20,7 +20,7 @@ void Network::SendMsg(network_address_t src, network_address_t dst, Message msg)
 
 void Network::SendBigBlock(network_address_t src, network_address_t dst, BigBlock bk){
   std::lock_guard<std::mutex> guard(_mutex);
-  _blocks.push_back({src,dst,bk});
+  _bigblocks.push_back({src,dst,bk});
 }
 MessageAddressed Network::RecvMsg(network_address_t dst) {
     std::lock_guard<std::mutex> guard(_mutex);
@@ -36,14 +36,14 @@ MessageAddressed Network::RecvMsg(network_address_t dst) {
     throw std::runtime_error("no message for you");
 }
 
-BlockAddressed Network::RecvBigBlock(network_address_t dst) {
+BigBlockAddressed Network::RecvBigBlock(network_address_t dst) {
   std::lock_guard<std::mutex> guard(_mutex);
-  for (auto it = _blocks.begin(); it !=_blocks.end(); ++it)
+  for (auto it = _bigblocks.begin(); it !=_bigblocks.end(); ++it)
   {
     if(it->dst == dst)
     {
       auto bk = *it;
-      _blocks.erase(it);
+      _bigblocks.erase(it);
       return bk;
     }
   }
@@ -53,8 +53,13 @@ network_address_t Network::AssignAddress() {
     std::lock_guard<std::mutex> guard(_mutex);
     return ++nextAddress;
 }
-bool Network::List_Blocks() {
-  return _blocks.empty();
+bool Network::List_BigBlocks_Empty() {
+  return _bigblocks.empty();
+}
+
+void Network::SendBlock( Block bk) {
+    std::lock_guard<std::mutex> guard(_mutex);
+    _blocks.push_back(bk);
 }
 
 network_address_t NetworkNode::GetNodeAddress() const{
@@ -76,6 +81,9 @@ network_address_t NetworkNode::GetNodeAddress() const{
 
  void NetworkNode::SendMsg(network_address_t dst, Message msg) {
     Network::instance().SendMsg(GetNodeAddress(),dst,msg);
+}
+void NetworkNode::SendBlock(Block &bk) {
+    Network::instance().SendBlock(bk);
 }
 void NetworkNode::SendBigBlock(network_address_t dst, BigBlock bk) {
   Network::instance().SendBigBlock(GetNodeAddress(),dst,bk);

@@ -12,10 +12,11 @@
 #include "Network.h"
 #include "Sealer.h"
 #include "ViewState.h"
+#include "Committee.h"
 
 //客户端
 
-class Committee;
+
 class Client : public NetworkNode {
     std::map<std::string ,int> accepted_reply;
 public:
@@ -49,17 +50,17 @@ class Node : public NetworkNode {
         key_t &operator=(const key_t &k2) ;
     };
     std::map<key_t ,ViewState> _log;
-    size_t _seq = 0;
+
     size_t _view = 0;
 
 
 public:
     std::vector<network_address_t> _otherCommitteeNodes;
     int committe_seq ;
+    size_t committee_trans = 0;
     bool isLeader;
     bool isBoss;
     string iDentity;
-    size_t GetTransNum();
     Blockchain GetBlockChain();
     void TransToCache(Message &msg);
     Block SealTrans();
@@ -69,6 +70,7 @@ public:
     void OnRecvMsg(network_address_t src, Message msg) override;
     void GetOutBk();
     void SendAll(Message &msg);
+    void SendBlock(Block &bk);
     void SendBigBlock(BigBlock &bk);
     void SendUnpack(Message &msg);
 

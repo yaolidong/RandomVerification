@@ -7,10 +7,6 @@
 #include <string>
 
 
-size_t Node::GetTransNum()
-{
-    return _seq++;
-}
 
 void Client::SendRequest(network_address_t dst, Message & msg) {
     SendMsg(dst, msg);
@@ -139,19 +135,15 @@ void Node::TransToCache(Message &msg) {
 
 //TODO:设置一个交易打包阈值
 Block Node::SealTrans() {
-    Block bNew;
     sl.CalculateMerkRoot(ca);
-    if (sl.IsCacheEmpty(ca))
-    {
-        bNew = Block(sl.merkle_root);
-        bNew._bHash = bNew.CalculateBlockHash();
-    }
+    Block bNew = Block(sl.merkle_root);
+    bNew._bHash = bNew.CalculateBlockHash();
     return bNew;
 }
 
 BigBlock Node::SealBlocks() {
     BigBlock bNew;
-
+    //TODO:打包大区块由Node，Committee还是BigBlock完成
     bNew = sl.Upchain(bChain);//区块上链
     return bNew;
 }
@@ -164,17 +156,17 @@ void Node::SendBigBlock(BigBlock &bk) {
 
 //主节点分发区块给其他节点
 void Node::GetOutBk() {
-  BlockAddressed bka;
+  BigBlockAddressed bka;
 
   //区块池不为空，则添加区块
-  if (!Network::instance().List_Blocks())
+  if (!Network::instance().List_BigBlocks_Empty())
   {
      bka = Network::instance().RecvBigBlock(GetNodeAdd());
      bChain.AddBlock(bka.bk);
      //其他节点接收到主节点的区块，
 //     if (GetNodeAdd() == 3)
 //     {
-         uint32_t block_index = bka.bk.GetBIndex();
+        uint32_t block_index = bka.bk._bBIndex;
        std::cout << "节点：" << GetNodeAdd() <<" 添加第 "<< block_index <<" 个区块. "<< std::endl;
 //       std::cout << "第"<< block_index <<"个区块的ePochRandomness： " << bka.bk._bHash <<endl;
        stringstream ss;
@@ -207,4 +199,9 @@ string Node::CalculateEpochRandomness(Block &bk) {
  //   cout<<"节点 "<<GetNodeAdd()<<" ePochRandomness:" <<bk._bHash<<endl;
     ss << GetNodeAdd() << bk._bHash;
     return sha256(ss.str());
+}
+
+void Node::SendBlock(Block & bk) {
+    NetworkNode::SendBlock(bk);
+
 }

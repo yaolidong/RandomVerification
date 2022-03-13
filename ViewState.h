@@ -14,8 +14,10 @@ class ViewState
 	{
         SEND_TRANS,//K-ca共识阶段
         COMFIRM_TRANS,
-        WAIT_BLOCK,
-        PBFT_CONSENSUS//共识委员会投票
+        PBFT_Prepare,
+        PBFT_Commit,
+        PBFT_Reply,//共识委员会投票
+        WAIT_BLOCK
 	}_state;
 
       size_t accepted_confirm = 0;
