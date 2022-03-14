@@ -67,6 +67,22 @@ void Node::SendAll(Message &msg) {
     }
 }
 
+
+void Node::SendConsensus(Message msg) {
+
+    for(auto dst :ConsensusCommittee::instance().GetCommitteeMembers())
+    {
+        if (dst == GetNodeAdd())
+            continue;
+        else
+        {
+            cout << " 向节点 " << dst ;
+            SendMsg(dst,msg);
+        }
+
+    }
+}
+
 network_address_t Node::GetNodeAdd() {
     return NetworkNode::GetNodeAddress();
 }

@@ -70,6 +70,8 @@ public:
     void OnRecvMsg(network_address_t src, Message msg) override;
     void GetOutBk();
     void SendAll(Message &msg);
+//    void SendMsg();
+    void SendConsensus(Message  msg);
     void SendBlock(Block &bk);
     void SendBigBlock(BigBlock &bk);
     void SendUnpack(Message &msg);

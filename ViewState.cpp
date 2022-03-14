@@ -12,11 +12,17 @@ ViewState::ViewState() {
 ViewState::ViewState(const ViewState &vt) {
     _state = vt._state;
     accepted_confirm= vt.accepted_confirm;
+    accepted_pre_prepare = vt.accepted_pre_prepare;
+    accepted_prepare= vt.accepted_prepare;
+    accepted_commit = vt.accepted_commit;
 }
 ViewState & ViewState::operator=(const ViewState &vt) {
     if (this == &vt)
         return *this;
     _state = vt._state;
+    accepted_pre_prepare = vt.accepted_pre_prepare;
+    accepted_prepare= vt.accepted_prepare;
+    accepted_commit = vt.accepted_commit;
     accepted_confirm = vt.accepted_confirm;
     return *this;
 }
@@ -52,7 +58,7 @@ void ViewState::handle_message(Message msg, Node & node) {
   //不然，则进入等待交易模式
       case COMFIRM_TRANS: {
         if (msg.msg_type == Message::CONFIRM) {
-            cout << "主节点 " << node.GetNodeAdd() << "接收到确认信息" << endl;
+//            cout << "主节点 " << node.GetNodeAdd() << "接收到确认信息" << endl;
           accepted_confirm++;
         }
         if (accepted_confirm == k_value)
@@ -61,9 +67,8 @@ void ViewState::handle_message(Message msg, Node & node) {
             cout << msg.o << " 添加进交易池。"<< endl;
             node.TransToCache(msg);
             node.committee_trans--;
-
             //打包微区块；
-            //发送微区块至共识委员会其他成员，进入Prepare阶段；
+            //发送微区块至共识委员会其他成员，进入Pre_Prepare阶段；
             if (!node.committee_trans)
             {
                 Block bNew = node.SealTrans();
@@ -75,40 +80,81 @@ void ViewState::handle_message(Message msg, Node & node) {
                         cout << "节点：" << node.GetNodeAdd() << "发送区块给共识委员会其他成员：" << iter <<endl;
                         node.SendBlock(bNew);
                     }
-
                 }
                 ConsensusCommittee::instance().vec_blocks.emplace_back(bNew);
                 cout << "节点 " << node.GetNodeAdd() << "添加区块至共识委员会。" <<endl;
+                cout << ConsensusCommittee::instance().vec_blocks.size() << endl;
+                msg.msg_type = Message::PRE_PREPARE;
+                cout << "节点： " << node.GetNodeAdd();
+                msg.i = node.GetNodeAdd();
+                node.SendConsensus(msg);
+                cout << " 发送pre_prepare消息。" <<endl;
+
             }
 
-
-            _state = PBFT_Prepare;
         }
+          _state = PBFT_Pre_prepare;
       }
       break;
+
+      case PBFT_Pre_prepare:
+      {
+          if (msg.msg_type == Message::PRE_PREPARE)
+          {
+              accepted_pre_prepare++;
+              cout<< "节点 " << node.GetNodeAdd() << accepted_pre_prepare << endl;
+              if (accepted_pre_prepare == Num_Node/NUMOFMEMBERS)
+              {
+                  cout << "主节点 " << node.GetNodeAdd() << "进入PBFT预准备共识阶段" << endl;
+                  BigBlock bNew = node.SealBlocks();//交易打包进区块中
+                  node.SendBigBlock(bNew);
+                  msg.i = node.GetNodeAdd();
+                  msg.msg_type = Message::PREPARE;
+                  node.SendConsensus(msg);
+                  cout << "发送prepare消息。" <<endl;
+              }
+          }
+          _state = PBFT_Prepare;
+      }
+          break;
       //主节点确认该区块交易正确，将区块并将结果发送给其他主节点
       case PBFT_Prepare:
       {
-
+          if (msg.msg_type == Message::PREPARE)
+          {
+              msg.msg_type = Message::PREPARE;
+              cout << "主节点 " << node.GetNodeAdd() << "进入PBFT准备共识阶段" << endl;
+          }
+//        验证交易正确后，把验证结果发送给共识委员会其他成员
+          _state = PBFT_Commit;
       }
           break;
       //节点接收到2f+1个确认信息，将区块
       case PBFT_Commit:
       {
-
+          if (msg.msg_type == Message::PREPARE)
+              accepted_prepare++;
+          if (accepted_prepare == ceil((2/3)* Num_Node/NUMOFMEMBERS))
+          {
+              cout<< "主节点" << node.GetNodeAdd() <<"收到足够commit信息，即将进入commit阶段。"<<endl;
+          }
+        msg.msg_type = Message::COMMIT;
+        //交易上链，上链成功向共识委员会其他成员发送提交信息。
+        _state = PBFT_Reply;
       }
           break;
       case PBFT_Reply:
       {
-          cout << "主节点 " << node.GetNodeAdd() << "进入PBFT共识阶段" << endl;
-              //TODO:交易整合打包
-              BigBlock bNew = node.SealBlocks();//交易打包进区块中
-
-              node.SendBigBlock(bNew);
+          if (msg.msg_type == Message::COMMIT)
+              accepted_commit++;
+          if (accepted_commit ==ceil((2/3)* Num_Node/NUMOFMEMBERS))
+          {
               node.SendUnpack(msg);
-    //          node.iDentity = node.CalculateEpochRandomness(bNew);
-              cout<< "主节点发送大区块完成，即将进入下一个epoch。"<<endl;
-              _state = WAIT_BLOCK;
+//              node.iDentity = node.CalculateEpochRandomness(bNew);
+              cout<< "Leader节点" << node.GetNodeAdd() <<"收到多个commit信息，共识完成，即将进入下一个epoch。"<<endl;
+          }
+
+            _state = WAIT_BLOCK;
       }
 
     break;

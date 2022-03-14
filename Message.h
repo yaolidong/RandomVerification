@@ -12,7 +12,10 @@
 		REQUEST,
 		CONFIRM,
 		UNPACK,
-
+        PRE_PREPARE,
+        PREPARE,
+        COMMIT,
+        REPLY
 	}msg_type;
 
 	std::string o;
