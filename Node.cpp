@@ -41,20 +41,36 @@ void Node::OnRecvMsg(network_address_t src, Message msg)
 
     if (msg.msg_type == Message::REQUEST)
     {
-        ViewState vs = ViewState();
+        ViewState vs = ViewState(msg);
         _log[kt] = vs;
     }
+
+
+    if (msg.msg_type == Message::PRE_PREPARE||msg.msg_type == Message::UNPACK)
+    {
+        auto iter = _log.find(kt);
+        if (iter ==_log.end())
+        {
+//            cout << "节点： " << GetNodeAdd() << " 无 " << msg.d << " 视图，即将创建该信息视图。" << endl;
+            ViewState vs = ViewState(msg);
+            _log[kt] = vs;
+            }
+        }
 
     auto iter = _log.find(kt);
     if (iter ==_log.end())
     {
-      std::cout <<"节点：" <<GetNodeAdd() << "找不到交易信息视图！"<< std::endl;
+        std::cout <<"节点：" <<GetNodeAdd() << "找不到交易信息视图！"<< std::endl;
     }
     else
     {
         iter->second.handle_message(msg, *this);
+
     }
-  }
+}
+
+
+
 
 
 
@@ -149,7 +165,6 @@ void Node::TransToCache(Message &msg) {
 }
 
 
-//TODO:设置一个交易打包阈值
 Block Node::SealTrans() {
     sl.CalculateMerkRoot(ca);
     Block bNew = Block(sl.merkle_root);
@@ -172,27 +187,31 @@ void Node::SendBigBlock(BigBlock &bk) {
 
 //主节点分发区块给其他节点
 void Node::GetOutBk() {
-  BigBlockAddressed bka;
+//  BigBlockAddressed bka;
+//
+//  //区块池不为空，则添加区块
+//  if (!Network::instance().List_BigBlocks_Empty()) {
+//      bka = Network::instance().RecvBigBlock(GetNodeAdd());
+//      bChain.AddBlock(bka.bk);
+//      uint32_t block_index = bka.bk._bBIndex;
+//      std::cout << "节点：" << GetNodeAdd() << " 添加第 " << block_index << " 个区块. " << std::endl;
+//      std::cout << "第" << block_index << "个区块的哈希值： " << bka.bk._bHash
+////              << "前一个区块的哈希值： " << bka.bk.bPrevHash
+////              << "个区块的哈希值： " << bka.bk.
+////              << "个区块的哈希值： " << bka.bk._bHash
+////              << "个区块的哈希值： " << bka.bk._bHash
+//      << endl;
+//      stringstream ss;
+//      ss << GetNodeAdd() << bka.bk._bHash;
+//      iDentity = sha256(ss.str());
+//  }
+//  else
+//    std::cout << "区块列表为空！"<<std::endl;
 
-  //区块池不为空，则添加区块
-  if (!Network::instance().List_BigBlocks_Empty())
-  {
-     bka = Network::instance().RecvBigBlock(GetNodeAdd());
-     bChain.AddBlock(bka.bk);
-     //其他节点接收到主节点的区块，
-//     if (GetNodeAdd() == 3)
-//     {
-        uint32_t block_index = bka.bk._bBIndex;
-       std::cout << "节点：" << GetNodeAdd() <<" 添加第 "<< block_index <<" 个区块. "<< std::endl;
-//       std::cout << "第"<< block_index <<"个区块的ePochRandomness： " << bka.bk._bHash <<endl;
-       stringstream ss;
-       ss << GetNodeAdd() << bka.bk._bHash;
-       iDentity = sha256(ss.str());
- //
- //    }
-  }
-  else
-    std::cout << "区块列表为空！"<<std::endl;
+    bChain.AddBlock(ConsensusCommittee::instance().GetBigBlock());
+    uint32_t block_index = ConsensusCommittee::instance().GetBigBlock()._bBIndex;
+    std::cout << "节点：" << GetNodeAdd() << " 添加第 " << block_index << " 个区块. " << std::endl;
+    std::cout << "第" << block_index << "个区块的哈希值： " << ConsensusCommittee::instance().GetBigBlock()._bHash << endl;
 }
 
 
@@ -207,7 +226,11 @@ void Node::SendUnpack(Message &msg) {
   unpack.c = msg.c;
   unpack.m = msg.m;
   unpack.r = msg.r;
-  SendAll(unpack);
+    for (auto iter:_otherCommitteeNodes) {
+        cout << "节点：" << GetNodeAdd() << "节点：" << iter << "发送打包消息." << endl;
+        SendMsg(iter,unpack);
+    }
+
 }
 
 string Node::CalculateEpochRandomness(Block &bk) {

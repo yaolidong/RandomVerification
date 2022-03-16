@@ -2,7 +2,22 @@
 
 #include "Message.h"
 
+
 Message::Message(msg_type_t _type):msg_type(_type) {
+
+}
+
+
+Message::Message(network_address_t  master,msg_type_t _type):msg_type(_type) {
+    c = master;
+    t = time(nullptr);
+    o = "PBFT_Consensus";
+    n = 0;
+    i = 0;
+    v = 0;
+    r = "";
+    d = this->diggest();
+    m = this->str();
 }
 
 std::string Message::diggest() {
@@ -30,6 +45,7 @@ Message::Message(const Message &msg) {
   c = msg.c;
   o = msg.o;
   d = msg.d;
+  i = msg.i;
   v = msg.v;
   n = msg.n;
   r = msg.r;
@@ -42,6 +58,7 @@ Message &Message::operator=(const Message &msg) {
   c = msg.c;
   o = msg.o;
   d = msg.d;
+  i = msg.i;
   v = msg.v;
   n = msg.n;
   r = msg.r;

@@ -6,7 +6,7 @@
 #include "Node.h"
 
 ViewState::ViewState() {
-        _state = SEND_TRANS;
+        _state = PBFT_Pre_prepare;
 }
 
 ViewState::ViewState(const ViewState &vt) {
@@ -41,14 +41,14 @@ void ViewState::handle_message(Message msg, Node & node) {
           if (node.isLeader)
           {
               _state = COMFIRM_TRANS;
-              cout<<"第 " << node.committe_seq
-              <<" 委员会主节点: "<<node.GetNodeAdd() <<"即将进入交易确认阶段。"<<endl;
+//              cout<<"第 " << node.committe_seq
+//              <<" 委员会主节点: "<<node.GetNodeAdd() <<"即将进入交易确认阶段。"<<endl;
           }
           else
           {
-                _state = WAIT_BLOCK;
-              cout<<"第 " << node.committe_seq
-                  <<" 委员会节点: "<<node.GetNodeAdd() <<"即将进入交易等待阶段。"<<endl;
+              _state = PBFT_Reply;
+//              cout<<"第 " << node.committe_seq
+//                  <<" 委员会节点: "<<node.GetNodeAdd() <<"即将进入交易等待阶段。"<<endl;
           }
       }
       break;
@@ -58,8 +58,9 @@ void ViewState::handle_message(Message msg, Node & node) {
   //不然，则进入等待交易模式
       case COMFIRM_TRANS: {
         if (msg.msg_type == Message::CONFIRM) {
-//            cout << "主节点 " << node.GetNodeAdd() << "接收到确认信息" << endl;
           accepted_confirm++;
+//          cout << "主节点 " << node.GetNodeAdd() << "接收到" << msg.i << " " << msg.o
+//                 <<"确认信息:"  << accepted_confirm << endl;
         }
         if (accepted_confirm == k_value)
         {
@@ -82,18 +83,21 @@ void ViewState::handle_message(Message msg, Node & node) {
                     }
                 }
                 ConsensusCommittee::instance().vec_blocks.emplace_back(bNew);
-                cout << "节点 " << node.GetNodeAdd() << "添加区块至共识委员会。" <<endl;
-                cout << ConsensusCommittee::instance().vec_blocks.size() << endl;
+//                cout << "节点 " << node.GetNodeAdd() << "添加区块至共识委员会。" <<endl;
+//                cout << ConsensusCommittee::instance().vec_blocks.size() << endl;
+
+                msg = ConsensusCommittee::instance().PBFT();
+//                cout << "共识信息摘要：" << msg.d << endl;
                 msg.msg_type = Message::PRE_PREPARE;
-                cout << "节点： " << node.GetNodeAdd();
+//                cout << "节点： " << node.GetNodeAdd();
                 msg.i = node.GetNodeAdd();
                 node.SendConsensus(msg);
                 cout << " 发送pre_prepare消息。" <<endl;
-
+//                cout << msg.d <<endl;
+                _state = PBFT_Pre_prepare;
             }
-
         }
-          _state = PBFT_Pre_prepare;
+
       }
       break;
 
@@ -102,19 +106,30 @@ void ViewState::handle_message(Message msg, Node & node) {
           if (msg.msg_type == Message::PRE_PREPARE)
           {
               accepted_pre_prepare++;
-              cout<< "节点 " << node.GetNodeAdd() << accepted_pre_prepare << endl;
-              if (accepted_pre_prepare == Num_Node/NUMOFMEMBERS)
+              cout << "主节点 " << node.GetNodeAdd() << "接收到" << msg.i << " " << msg.o
+                   <<"PBFT预准备信息:"  << accepted_pre_prepare << endl;
+              if (accepted_pre_prepare == (Num_Node/NUMOFMEMBERS)-1)
               {
-                  cout << "主节点 " << node.GetNodeAdd() << "进入PBFT预准备共识阶段" << endl;
-                  BigBlock bNew = node.SealBlocks();//交易打包进区块中
-                  node.SendBigBlock(bNew);
+//                  cout << "主节点 " <<node.GetNodeAdd() << "进入PBFT预准备共识阶段" << endl;
+                  if (node.GetNodeAdd() == ConsensusCommittee::instance().GetWhoisMaster())
+                  {
+                      BigBlock bNew = node.SealBlocks();//交易打包进区块中
+//                      cout << "打包区块的哈希值：" << bNew._bHash << endl;
+                      node.SendBigBlock(bNew);
+                      ConsensusCommittee::instance().GetBigBlock() = bNew;
+//                      cout << "共识委员会存放的大区块哈希值：" <<  ConsensusCommittee::instance().GetBigBlock()._bHash << endl;
+                      for (auto iter:ConsensusCommittee::instance().GetCommitteeMembers()) {
+                          ConsensusCommittee::instance().SendBigBlock(iter,bNew);
+                      }
+                  }
                   msg.i = node.GetNodeAdd();
                   msg.msg_type = Message::PREPARE;
+                  cout << "节点： " << node.GetNodeAdd();
                   node.SendConsensus(msg);
                   cout << "发送prepare消息。" <<endl;
+                  _state = PBFT_Prepare;
               }
           }
-          _state = PBFT_Prepare;
       }
           break;
       //主节点确认该区块交易正确，将区块并将结果发送给其他主节点
@@ -122,55 +137,68 @@ void ViewState::handle_message(Message msg, Node & node) {
       {
           if (msg.msg_type == Message::PREPARE)
           {
-              msg.msg_type = Message::PREPARE;
-              cout << "主节点 " << node.GetNodeAdd() << "进入PBFT准备共识阶段" << endl;
+              accepted_prepare++;
+              cout << "主节点 " << node.GetNodeAdd() << "接收到" << msg.i << " " << msg.o
+                   <<"PBFT准备信息:"  << accepted_prepare << endl;
+              if (accepted_prepare == ceil((2.0/3)* Num_Node/NUMOFMEMBERS)-1)
+              {
+//                  cout << "主节点 " << node.GetNodeAdd() << "接收到足够的prepare消息，进入PBFT准备共识阶段" << endl;
+                  msg.i = node.GetNodeAdd();
+                  msg.msg_type = Message::COMMIT;
+                  cout << "节点： " << node.GetNodeAdd();
+                  node.SendConsensus(msg);
+                  cout << "发送commit消息。" <<endl;
+                  _state = PBFT_Commit;
+              }
           }
 //        验证交易正确后，把验证结果发送给共识委员会其他成员
-          _state = PBFT_Commit;
+
       }
           break;
       //节点接收到2f+1个确认信息，将区块
       case PBFT_Commit:
       {
-          if (msg.msg_type == Message::PREPARE)
-              accepted_prepare++;
-          if (accepted_prepare == ceil((2/3)* Num_Node/NUMOFMEMBERS))
+          if (msg.msg_type == Message::COMMIT)
           {
-              cout<< "主节点" << node.GetNodeAdd() <<"收到足够commit信息，即将进入commit阶段。"<<endl;
+              accepted_commit++;
+//              cout << "主节点 " << node.GetNodeAdd() << "接收到" << msg.i << " " << msg.o
+//                   <<"PBFT提交信息:"  << accepted_commit << endl;
+              cout << "节点： " << node.GetNodeAdd() << "接收到的commit消息数量：" << accepted_commit << endl;
+              if (accepted_commit == ceil((2.0/3)* Num_Node/NUMOFMEMBERS))
+              {
+                  cout<< "主节点" << node.GetNodeAdd() <<"收到足够commit信息，即将进入reply阶段。"<<endl;
+                  node.SendUnpack(msg);
+                  _state = WAIT_BLOCK;
+              }
           }
-        msg.msg_type = Message::COMMIT;
-        //交易上链，上链成功向共识委员会其他成员发送提交信息。
-        _state = PBFT_Reply;
       }
           break;
-      case PBFT_Reply:
-      {
-          if (msg.msg_type == Message::COMMIT)
-              accepted_commit++;
-          if (accepted_commit ==ceil((2/3)* Num_Node/NUMOFMEMBERS))
-          {
-              node.SendUnpack(msg);
-//              node.iDentity = node.CalculateEpochRandomness(bNew);
-              cout<< "Leader节点" << node.GetNodeAdd() <<"收到多个commit信息，共识完成，即将进入下一个epoch。"<<endl;
-          }
-
-            _state = WAIT_BLOCK;
-      }
-
-    break;
 
       case WAIT_BLOCK:
       {
           if (msg.msg_type == Message::UNPACK)
           {
               node.GetOutBk();
-              cout<<"所有节点区块同步完成，进入下一个epoch."<<endl;
+//              cout<<"节点 " << node.GetNodeAdd() << " 区块同步完成，进入下一个epoch."<<endl;
           }
 
       }
           break;
+
+      case PBFT_Reply:
+          break;
   }
 }
+
+
+ViewState::ViewState(const Message &msg) {
+    _state = SEND_TRANS;
+    if (msg.msg_type == Message::PRE_PREPARE)
+        _state = PBFT_Pre_prepare;
+    if (msg.msg_type == Message::UNPACK)
+        _state = WAIT_BLOCK;
+}
+
 
 
 

@@ -71,9 +71,6 @@ ConsensusCommittee &ConsensusCommittee::instance() {
     return inst;
 }
 
-void ConsensusCommittee::PBFT(Message msg) {
-
-}
 
 
 BigBlock  ConsensusCommittee::SealerBlock() {
@@ -86,15 +83,24 @@ BigBlock  ConsensusCommittee::SealerBlock() {
     bigBlock._bHash = sha256(ss.str());
     return bigBlock;
 }
-void ConsensusCommittee::SendBigBlock(Node & node,BigBlock & bBlk) {
+void ConsensusCommittee::SendBigBlock(network_address_t  ip,BigBlock & bBlk) {
         //TODO:发送大区块
 
-        if (node.GetNodeAdd() == GetWhoisMaster())
+        if (ip != GetWhoisMaster())
         {
-            Network::instance().SendBigBlock(GetLeaderAddress(),node.GetNodeAdd(),bBlk);
-            cout << "共识委员会：" << sequence << "Master节点" << GetWhoisMaster() << "发送大区块给节点 " << node.GetNodeAdd() << endl;
+            Network::instance().SendBigBlock(GetLeaderAddress(),ip,bBlk);
+            cout << "共识委员会：" << sequence << " 节点 " <<GetWhoisMaster()  << "发送大区块给节点 " << ip<< endl;
         }
 
 }
+
+Message & ConsensusCommittee::PBFT() {
+    return PBFT_msg;
+}
+
+BigBlock &ConsensusCommittee::GetBigBlock() {
+    return bBlk;
+}
+
 
 

@@ -82,7 +82,7 @@ int main()
 
     //各节点记录委员会的其他节点
     for (auto it:vec_committee) {
-        for (auto & node:nodes) {
+        for (auto &node:nodes) {
             it.ShuffleNode(node);
         }
 
@@ -101,15 +101,15 @@ int main()
     }
 
     //输出委员会的其他成员
-    for (auto & node:nodes)
-    {
-        cout << "节点 ：" << node->GetNodeAdd() << " 属于第 " << node->committe_seq << " 委员会。" << endl;
-        for (auto committee_members:node->_otherCommitteeNodes) {
-            cout<< "其他节点： " << committee_members << " ";
-
-        }
-        cout << endl;
-    }
+//    for (auto & node:nodes)
+//    {
+//        cout << "节点 ：" << node->GetNodeAdd() << " 属于第 " << node->committe_seq << " 委员会。" << endl;
+//        for (auto committee_members:node->_otherCommitteeNodes) {
+//            cout<< "其他节点： " << committee_members << " ";
+//
+//        }
+//        cout << endl;
+//    }
 
 
 
@@ -135,17 +135,17 @@ int main()
             if (iter.sequence == result)
             {
                 iter.GetTranslations().emplace_back(request);
-                cout << "交易 " << str << " 被分配到第 " << iter.sequence
-                     << " 委员会中。" << endl;
-                if (!iter.GetTranslations().empty())
-                    cout << "第" << iter.sequence << "委员会拥有 " << iter.GetTranslations().size() << " 交易。 "  << endl;
+//                cout << "交易 " << str << " 被分配到第 " << iter.sequence
+//                     << " 委员会中。" << endl;
+//                if (!iter.GetTranslations().empty())
+//                    cout << "第" << iter.sequence << "委员会拥有 " << iter.GetTranslations().size() << " 交易。 "  << endl;
             }
         }
 
         for (auto &node: nodes) {
             if (result == node->committe_seq) {
                 client.SendRequest(node->GetNodeAdd(), request);
-                cout << "第 " << i<< " 交易,其尾号 " << result << " 发送至节点 " << node->GetNodeAdd() << endl;
+//                cout << "第 " << i<< " 交易,其尾号 " << result << " 发送至节点 " << node->GetNodeAdd() << endl;
             }
         }
 //        for(int j = 0; j < Num_Node; j++)
@@ -169,7 +169,7 @@ int main()
 
 
     }
-
+//将每个委员会交易数量发送给节点
     for (auto & iter:vec_committee) {
         cout <<  "委员会： " << iter.sequence << "总共拥有 " << iter.GetTranslations().size()  << "交易。"<<endl;
         for (auto  & node: nodes) {

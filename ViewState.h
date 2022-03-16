@@ -30,9 +30,11 @@ class ViewState
 
 public:
     ViewState();
+//    ViewState(Message & msg);
     ViewState(const ViewState& vt);
     ViewState & operator = (const ViewState& vt);
     explicit ViewState(const Message& msg);
     void handle_message(Message msg, Node & node);
+
 };
 #endif

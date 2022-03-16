@@ -72,6 +72,7 @@ network_address_t NetworkNode::GetNodeAddress() const{
              try {
                  auto msg = Network::instance().RecvMsg(GetNodeAddress());
                  OnRecvMsg(msg.src, msg.msg);
+//                 auto bBlk = Network::instance().RecvBigBlock(GetNodeAddress());
              } catch (...) {
                  std::this_thread::sleep_for(1s);
              }

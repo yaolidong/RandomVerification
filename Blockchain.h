@@ -10,7 +10,7 @@
 using namespace std;
 
 class Blockchain{
-    size_t _bIndex = 1;
+    size_t _bIndex = 0;
 public:
     Blockchain();
     BigBlock AddBlock(BigBlock bNew);

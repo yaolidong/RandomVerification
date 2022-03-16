@@ -10,6 +10,7 @@
 #include "Message.h"
 //#include "Node.h"
 //#include "Network.h"
+#include "ViewState.h"
 #include <algorithm>
 #include <random>
 
@@ -24,6 +25,7 @@ private:
     std::vector<int> _members;
     int whoismaster;
     vector<Message>_translations;
+
 public:
     int sequence;
     Committee();
@@ -40,15 +42,18 @@ public:
 
 class ConsensusCommittee:public Committee{
 private:
+    BigBlock bBlk;
+    Message PBFT_msg = Message(GetWhoisMaster(),Message::PRE_PREPARE);
 public:
     vector<Block>vec_blocks;
     static ConsensusCommittee & instance();
     ConsensusCommittee();
     ConsensusCommittee(int num_members, int seq, int wism);
-    void PBFT(Message msg);
+    BigBlock & GetBigBlock();
+    Message & PBFT();
     //打包大区块
     BigBlock SealerBlock();
-    void SendBigBlock(Node & node, BigBlock & bBlk);
+    void SendBigBlock(network_address_t ip, BigBlock & bBlk);
 };
 
 #endif //K_CA_COMMITTEE_H

@@ -15,7 +15,7 @@
         PRE_PREPARE,
         PREPARE,
         COMMIT,
-        REPLY
+        PBFT
 	}msg_type;
 
 	std::string o;
@@ -30,6 +30,7 @@
 
 
         explicit Message(msg_type_t _type);
+        Message(network_address_t master,msg_type_t _type);
         Message(const Message & msg);
         Message & operator=(const Message & msg);
 	std::string diggest();
